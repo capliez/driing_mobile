@@ -1,0 +1,10 @@
+{
+  "userWelcome": "<1>Bonjour {{name}}</1>",
+  "pending": "en attente",
+  "sentence1": "L’habitant vient vous voir pour récupérer son colis ?",
+  "textBtn1": "Remettre le colis",
+  "sentence2": "Des colis viennent d'arriver",
+  "textBtn2": "Ajouter un colis",
+  "loading": "Chargement"
+
+}

@@ -1,0 +1,23 @@
+{
+  "btnReturnOfPageHome": "Retour sur la page d'accueil",
+  "btnReturnOfPageListDeliver": "Retour sur la page des colis en attente",
+  "btnReturnScreenPrevious": "Accède à l'écran précédent",
+  "textDeliverPackage": "Remettre le colis",
+  "inputSearch": "Rechercher un habitant...",
+  "textWaitPackage": "Colis en attente",
+  "btnGrillResult": "Résultat en grille",
+  "btnListResult": "Résultat en liste",
+  "textNoPackagesPending": "Aucun colis en attente",
+  "textWithName": "Avec un nom",
+  "textWithSecurityCode": "Avec un code sécurisé",
+  "textResidence": "Résidence",
+  "textUnknownName": "Nom inconnu",
+  "textCountPackage": "Nombre de colis",
+  "textPackage": "Colis",
+  "textDate": "Date",
+  "noResultCode": "Ce code n'existe pas !",
+  "btnValid": "Valider",
+  "textNoCode": "Vous n’avez pas son code ?",
+  "textInformation": "Information",
+  "textAddNewPackage": "Ajouter un nouveau colis"
+}
