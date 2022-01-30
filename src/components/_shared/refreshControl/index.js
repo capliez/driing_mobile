@@ -17,11 +17,12 @@ const RefreshControlComponent = ({ onRefreshControl }) => {
       onRefreshControl && onRefreshControl();
     });
   }, []);
+
   return (
     <RefreshControl
       title={t('loading')}
       tintColor={'#222235'}
-      colors={'#222235'}
+      colors={['#222235']}
       refreshing={refreshing}
       onRefresh={onRefresh}
     />
