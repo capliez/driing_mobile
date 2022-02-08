@@ -1,12 +1,17 @@
 import PropTypes from 'prop-types';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import ItemDeliver from './item';
-import InputSearchComponent from '../_shared/inputSearch';
-import NoPackageComponent from '../../components/deliver/noPackage';
+import React, { lazy } from 'react';
+import { Text, View } from 'react-native';
 import { PACKAGES } from '../../constants/packages';
 
-const MainWithName = ({ packages, t, navigation }) => {
+const NoPackageLazyComponent = lazy(
+  () => import('../../components/deliver/noPackage'),
+);
+
+const InputSearchLazyComponent = lazy(() => import('../_shared/inputSearch'));
+
+const ItemDeliverLazyComponent = lazy(() => import('./item'));
+
+const ListDeliverComponent = ({ packages, t, navigation }) => {
   const [searchTerm, onChangeText] = React.useState('');
 
   const filterList = () => {
@@ -21,12 +26,15 @@ const MainWithName = ({ packages, t, navigation }) => {
 
   const renderGridList = () =>
     filterList().map((p) => (
-      <ItemDeliver navigation={navigation} key={p.id} item={p} />
+      <ItemDeliverLazyComponent navigation={navigation} key={p.id} item={p} />
     ));
 
   return (
     <>
-      <InputSearchComponent value={searchTerm} onChangeText={onChangeText} />
+      <InputSearchLazyComponent
+        value={searchTerm}
+        onChangeText={onChangeText}
+      />
 
       {PACKAGES ? (
         <View style={{ marginTop: 15 }}>
@@ -43,16 +51,16 @@ const MainWithName = ({ packages, t, navigation }) => {
           )}
         </View>
       ) : (
-        <NoPackageComponent navigation={navigation} />
+        <NoPackageLazyComponent navigation={navigation} />
       )}
     </>
   );
 };
 
-MainWithName.propTypes = {
+ListDeliverComponent.propTypes = {
   packages: PropTypes.array,
   t: PropTypes.any,
   navigation: PropTypes.object,
 };
 
-export default MainWithName;
+export default ListDeliverComponent;

@@ -1,14 +1,23 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { lazy } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SafeAreaView, ScrollView, StyleSheet, View, Text } from 'react-native';
-import MainWithName from '../../components/deliver/mainWithName';
-import HeaderComponent from '../../components/_shared/headerPage';
+import { SafeAreaView, ScrollView, View } from 'react-native';
 import RefreshControlComponent from '../../components/_shared/refreshControl';
-import { HomeRoot } from '../../constants/routes';
 import { PACKAGES } from '../../constants/packages';
+import { HomeRoot } from '../../constants/routes';
 import { marginHorizontal, marginTop } from '../../utils';
-import MenuBotom from '../../components/menuBottom';
+
+const HeaderLazyComponent = lazy(
+  () => import('../../components/_shared/headerPage'),
+);
+
+const ListDeliverLazyComponent = lazy(
+  () => import('../../components/deliver/listDeliver'),
+);
+
+const MenuBotomLazyComponent = lazy(
+  () => import('../../components/menuBottom'),
+);
 
 const DeliverPage = ({ navigation }) => {
   const { t } = useTranslation('deliver');
@@ -22,16 +31,20 @@ const DeliverPage = ({ navigation }) => {
         refreshControl={<RefreshControlComponent />}
       >
         <View style={{ marginTop, marginHorizontal }}>
-          <HeaderComponent
+          <HeaderLazyComponent
             title={'📦 Liste des colis en attente'}
             route={HomeRoot}
             navigation={navigation}
           />
 
-          <MainWithName t={t} packages={PACKAGES} navigation={navigation} />
+          <ListDeliverLazyComponent
+            t={t}
+            packages={PACKAGES}
+            navigation={navigation}
+          />
         </View>
       </ScrollView>
-      <MenuBotom navigation={navigation} />
+      <MenuBotomLazyComponent navigation={navigation} />
     </SafeAreaView>
   );
 };

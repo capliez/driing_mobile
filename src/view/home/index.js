@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React, { lazy, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import ItemDeliver from '../../components/deliver/item';
 import MenuBotom from '../../components/menuBottom';
 import { PACKAGES } from '../../constants/packages';
 import { marginHorizontal, marginTop } from '../../utils';
@@ -29,6 +28,10 @@ const BlockDeliverPackageComponent = lazy(
 
 const OnBoardingComponent = lazy(() => import('../../components/onboarding'));
 
+const ItemResidentLazyComponent = lazy(
+  () => import('../../components/resident/item'),
+);
+
 const HomePage = ({ navigation }) => {
   const [showRealApp, setShowRealApp] = useState(true);
   const [searchTerm, onChangeText] = React.useState('');
@@ -50,7 +53,7 @@ const HomePage = ({ navigation }) => {
   };
   const renderGridList = () =>
     filterList().map((p) => (
-      <ItemDeliver navigation={navigation} key={p.id} item={p} />
+      <ItemResidentLazyComponent navigation={navigation} key={p.id} item={p} />
     ));
 
   if (!showRealApp) {

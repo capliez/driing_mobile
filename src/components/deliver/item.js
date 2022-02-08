@@ -1,13 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Moment from 'react-moment';
-import { Image, StyleSheet, Text, View, Pressable } from 'react-native';
-import IconIonicons from 'react-native-vector-icons/Ionicons';
-import { DeliverCurrentRoot } from '../../constants/routes';
 import { useTranslation } from 'react-i18next';
+import { StyleSheet, Text, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import OnePackageImg from '../../images/packages/onePackage';
 import UserAvatar from 'react-native-user-avatar';
+import IconIonicons from 'react-native-vector-icons/Ionicons';
+import OnePackageImg from '../../images/packages/onePackage';
 
 const ItemOneRow = ({ item, navigation, onClick }) => {
   const { t } = useTranslation('deliver');
@@ -28,7 +26,7 @@ const ItemOneRow = ({ item, navigation, onClick }) => {
       </View>
       <View style={styles.divLast}>
         <View style={styles.divLastOne}>
-          <Text>2 colis</Text>
+          <Text style={{ marginRight: 10 }}>2 colis</Text>
           <SvgXml
             title={'Nombre de colis'}
             xml={OnePackageImg}
