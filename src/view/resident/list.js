@@ -9,22 +9,21 @@ const HeaderLazyComponent = lazy(
   () => import('../../components/_shared/headerPage'),
 );
 
-const ListDeliverLazyComponent = lazy(
-  () => import('../../components/deliver/listDeliver'),
+const ListResidentLazyComponent = lazy(
+  () => import('../../components/resident/list'),
 );
 
-const DeliverPage = ({ navigation }) => {
-  const { t } = useTranslation('deliver');
+const ListResident = ({ navigation }) => {
+  const { t } = useTranslation('resident');
 
   return (
     <LayoutDefault navigation={navigation}>
       <HeaderLazyComponent
-        title={'📦 Liste des colis en attente'}
+        title={'🎈 Vos habitants'}
         route={HomeRoot}
         navigation={navigation}
       />
-
-      <ListDeliverLazyComponent
+      <ListResidentLazyComponent
         t={t}
         packages={PACKAGES}
         navigation={navigation}
@@ -33,8 +32,8 @@ const DeliverPage = ({ navigation }) => {
   );
 };
 
-DeliverPage.propTypes = {
+ListResident.propTypes = {
   navigation: PropTypes.object,
 };
 
-export default DeliverPage;
+export default ListResident;

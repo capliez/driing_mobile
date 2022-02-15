@@ -4,7 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 
-const HeaderComponent = ({ navigation, route, title, isBack }) => {
+const HeaderComponent = ({
+  navigation,
+  route,
+  title,
+  isBack,
+  functionBack,
+}) => {
   const { t } = useTranslation('deliver');
 
   return (
@@ -16,7 +22,9 @@ const HeaderComponent = ({ navigation, route, title, isBack }) => {
             accessibilityRole="button"
             accessibilityLabel={t('btnReturnOfPageHome')}
             accessibilityHint={t('btnReturnScreenPrevious')}
-            onPress={() => navigation.navigate(route)}
+            onPress={() =>
+              functionBack ? functionBack() : navigation.navigate(route)
+            }
           >
             <IconIonicons
               color={'#131314'}

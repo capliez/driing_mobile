@@ -9,7 +9,11 @@ import {
   View,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { HomeRoot, DeliverListRoot } from '../../constants/routes';
+import {
+  HomeRoot,
+  DeliverListRoot,
+  ResidentListRoot,
+} from '../../constants/routes';
 import { SvgXml } from 'react-native-svg';
 
 //Icon
@@ -65,8 +69,8 @@ const MenuBotom = ({ navigation }) => {
       title: t('menu:inhabitants'),
       iconActive: habitantActiveIcon,
       icon: habitantIcon,
-      root: null,
-      isActive: routeCurrent === null,
+      root: ResidentListRoot,
+      isActive: routeCurrent === ResidentListRoot,
     },
     {
       id: 4,

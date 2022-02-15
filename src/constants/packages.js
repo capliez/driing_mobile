@@ -2,7 +2,6 @@ export const PACKAGES = [
   {
     id: 1,
     date: new Date(),
-    firstName: 'James',
     lastName: 'Bron',
     nbPackage: 2,
     avatar: require('../../assets/user.png'),
@@ -11,7 +10,6 @@ export const PACKAGES = [
   {
     id: 2,
     date: new Date(),
-    firstName: 'Lucie',
     lastName: 'Dana',
     nbPackage: 1,
     avatar: require('../../assets/user1.png'),
@@ -20,7 +18,7 @@ export const PACKAGES = [
   {
     id: 3,
     date: new Date(),
-    firstName: 'Jean',
+    lastName: 'Capliez',
     nbPackage: 2,
     avatar: require('../../assets/user3.png'),
     code: '934O',
@@ -28,8 +26,7 @@ export const PACKAGES = [
   {
     id: 4,
     date: new Date(),
-    firstName: 'Marie',
-    lastName: 'Larue',
+    lastName: 'Hamida',
     nbPackage: 2,
     avatar: require('../../assets/user2.png'),
     code: '834L',
@@ -37,9 +34,22 @@ export const PACKAGES = [
   {
     id: 5,
     date: new Date(),
-    firstName: 'Pascal',
     lastName: 'LeGrand',
     nbPackage: 2,
+    code: null,
+  },
+  {
+    id: 6,
+    date: new Date(),
+    lastName: 'Durant',
+    nbPackage: 3,
+    code: null,
+  },
+  {
+    id: 7,
+    date: new Date(),
+    lastName: 'Gomez',
+    nbPackage: 3,
     code: null,
   },
 ];

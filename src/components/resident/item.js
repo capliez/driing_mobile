@@ -5,34 +5,25 @@ import { Image, StyleSheet, Text, View, Pressable } from 'react-native';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 import { DeliverCurrentRoot } from '../../constants/routes';
 import { useTranslation } from 'react-i18next';
+import UserAvatar from 'react-native-user-avatar';
 
-const ItemOneRow = ({ item, navigation, onClick }) => {
+const ItemResident = ({ item, navigation, onClick }) => {
   const { t } = useTranslation('deliver');
-
   return (
     <View accessible accessibilityRole="tab" style={styles.divItem}>
       <View style={{ flexDirection: 'row' }}>
         <View style={styles.divItemProfile}>
-          <Image
-            accessible
-            accessibilityRole="image"
-            accessibilityLabel={`${item.firstName} ${item?.lastName}`}
-            loadingIndicatorSource={require('../../../assets/noUser.jpg')}
-            style={styles.userProfile}
-            source={
-              item.avatar ? item.avatar : require('../../../assets/noUser.jpg')
-            }
-          />
+          <UserAvatar style={styles.userProfile} name={item.lastName} />
         </View>
         <View style={styles.divItemLabel}>
           <View style={{ marginBottom: 5 }}>
             <Text
               accessible
               accessibilityRole="text"
-              accessibilityLabel={`${item.firstName} ${item?.lastName}`}
+              accessibilityLabel={item.lastName}
               style={styles.textNameUser}
             >
-              {item.firstName.toUpperCase()} {item?.lastName?.toUpperCase()}
+              {item.lastName.toUpperCase()}
             </Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -144,10 +135,10 @@ const styles = StyleSheet.create({
   },
 });
 
-ItemOneRow.propTypes = {
+ItemResident.propTypes = {
   item: PropTypes.object,
   navigation: PropTypes.object,
   onClick: PropTypes.func,
 };
 
-export default ItemOneRow;
+export default ItemResident;

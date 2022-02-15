@@ -6,6 +6,8 @@ import {
   DeliverCurrentRoot,
   DeliverListRoot,
   AddPackageRoot,
+  ResidentListRoot,
+  SignInRoot,
 } from './constants/routes';
 
 const Stack = createStackNavigator();
@@ -14,6 +16,8 @@ const HomeScreen = lazy(() => import('./view/home'));
 const ListDeliverScreen = lazy(() => import('./view/deliver/list'));
 const CurrentDeliverScreen = lazy(() => import('./view/deliver/current'));
 const AddPackageScreen = lazy(() => import('./view/addPackage'));
+const ListResidentScreen = lazy(() => import('./view/resident/list'));
+const SignInScreen = lazy(() => import('./view/auth/signin'));
 
 export default () => {
   return (
@@ -25,6 +29,13 @@ export default () => {
         translucent
       />
       <Stack.Navigator screenOptions={{ headerBackTitle: '', title: '' }}>
+        <Stack.Screen
+          name={SignInRoot}
+          component={SignInScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
         <Stack.Screen
           name={HomeRoot}
           component={HomeScreen}
@@ -49,6 +60,13 @@ export default () => {
         <Stack.Screen
           name={AddPackageRoot}
           component={AddPackageScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name={ResidentListRoot}
+          component={ListResidentScreen}
           options={{
             headerShown: false,
           }}

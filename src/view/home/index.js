@@ -6,10 +6,6 @@ import MenuBotom from '../../components/menuBottom';
 import { PACKAGES } from '../../constants/packages';
 import { marginHorizontal, marginTop } from '../../utils';
 
-const RefreshControlComponent = lazy(
-  () => import('../../components/_shared/refreshControl'),
-);
-
 const InputSearchComponent = lazy(
   () => import('../../components/_shared/inputSearch'),
 );
@@ -35,12 +31,7 @@ const ItemResidentLazyComponent = lazy(
 const HomePage = ({ navigation }) => {
   const [showRealApp, setShowRealApp] = useState(true);
   const [searchTerm, onChangeText] = React.useState('');
-  const [nbPackage, setNbPackage] = React.useState(12);
   const { t } = useTranslation(['deliver', 'translations']);
-
-  const onRefreshControl = () => {
-    setNbPackage(nbPackage + 1);
-  };
 
   const filterList = () => {
     return PACKAGES.filter((p) => {
@@ -67,66 +58,59 @@ const HomePage = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
-      <ScrollView
-        scrollEventThrottle={300}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        refreshControl={
-          <RefreshControlComponent onRefreshControl={onRefreshControl} />
-        }
-      >
-        <View style={{ marginTop, marginHorizontal }}>
-          <View>
-            <Trans
-              i18nKey="userWelcome"
-              defaults="<1>Bonjour {{name}}</1>"
-              values={{ name: 'Claude' }}
-              components={{
-                1: (
-                  <Text
-                    accessible
-                    accessibilityRole="text"
-                    style={styles.textWelcome}
-                  />
-                ),
-              }}
-            />
-          </View>
-          <InputSearchComponent
-            value={searchTerm}
-            onChangeText={onChangeText}
-          />
-          {searchTerm ? (
-            <View style={styles.divList}>
-              {PACKAGES ? (
-                renderGridList()
-              ) : (
+      <View style={{ marginVertical: marginTop, marginHorizontal, flex: 1 }}>
+        <View>
+          <Trans
+            i18nKey="userWelcome"
+            defaults="<1>Bonjour {{name}}</1>"
+            values={{ name: 'Claude' }}
+            components={{
+              1: (
                 <Text
                   accessible
                   accessibilityRole="text"
-                  accessibilityLabel={t('textNoPackagesPending')}
-                >
-                  {t('textNoPackagesPending')}
-                </Text>
-              )}
-            </View>
-          ) : (
-            <>
-              <BlockAddPackageComponent navigation={navigation} />
-              <View style={{ marginTop: 20 }}>
-                <Text style={styles.textTitle}>Où en êtes-vous ?</Text>
-              </View>
-              <BlockDeliverPackageComponent navigation={navigation} />
-              <View style={{ marginTop: 20 }}>
-                <Text style={styles.textTitle}>
-                  Besoin de contacter votre syndic ?
-                </Text>
-              </View>
-              <BlockContactComponent navigation={navigation} />
-            </>
-          )}
+                  style={styles.textWelcome}
+                />
+              ),
+            }}
+          />
         </View>
-      </ScrollView>
+        <InputSearchComponent value={searchTerm} onChangeText={onChangeText} />
+        {searchTerm ? (
+          <View style={styles.divList}>
+            {PACKAGES ? (
+              renderGridList()
+            ) : (
+              <Text
+                accessible
+                accessibilityRole="text"
+                accessibilityLabel={t('textNoPackagesPending')}
+              >
+                {t('textNoPackagesPending')}
+              </Text>
+            )}
+          </View>
+        ) : (
+          <ScrollView
+            contentContainerStyle={{ paddingBottom: 100 }}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+          >
+            <BlockAddPackageComponent navigation={navigation} />
+            <View style={{ marginTop: 20 }}>
+              <Text style={styles.textTitle}>Où en êtes-vous ?</Text>
+            </View>
+            <BlockDeliverPackageComponent navigation={navigation} />
+            <View style={{ marginTop: 20 }}>
+              <Text style={styles.textTitle}>
+                Besoin de contacter votre syndic ?
+              </Text>
+            </View>
+            <BlockContactComponent navigation={navigation} />
+          </ScrollView>
+        )}
+      </View>
+
       <MenuBotom navigation={navigation} />
     </SafeAreaView>
   );

@@ -1,17 +1,15 @@
 import PropTypes from 'prop-types';
-import React, { lazy } from 'react';
-import { Text, View, Platform, FlatList } from 'react-native';
+import React, { Fragment, lazy } from 'react';
+import { Text, View, FlatList } from 'react-native';
 import { PACKAGES } from '../../constants/packages';
 
-const NoPackageLazyComponent = lazy(
-  () => import('../../components/deliver/noPackage'),
-);
+const NoPackageLazyComponent = lazy(() => import('../deliver/noPackage'));
 
 const InputSearchLazyComponent = lazy(() => import('../_shared/inputSearch'));
 
-const ItemDeliverLazyComponent = lazy(() => import('./item'));
+const ItemLazyComponent = lazy(() => import('./item'));
 
-const ListDeliverComponent = ({ packages, t, navigation }) => {
+const ListResidentComponent = ({ packages, t, navigation }) => {
   const [searchTerm, onChangeText] = React.useState('');
 
   const filterList = () => {
@@ -35,12 +33,12 @@ const ListDeliverComponent = ({ packages, t, navigation }) => {
         <View style={{ marginVertical: 15, flex: 1 }}>
           {packages && packages.length > 0 ? (
             <FlatList
+              data={filterList()}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{ paddingBottom: 90 }}
-              data={filterList()}
               keyExtractor={(item) => item.id.toString()}
-              renderItem={(item) => (
-                <ItemDeliverLazyComponent
+              renderItem={({ item }) => (
+                <ItemLazyComponent
                   navigation={navigation}
                   key={item.id}
                   item={item}
@@ -64,10 +62,10 @@ const ListDeliverComponent = ({ packages, t, navigation }) => {
   );
 };
 
-ListDeliverComponent.propTypes = {
+ListResidentComponent.propTypes = {
   packages: PropTypes.array,
   t: PropTypes.any,
   navigation: PropTypes.object,
 };
 
-export default ListDeliverComponent;
+export default ListResidentComponent;
