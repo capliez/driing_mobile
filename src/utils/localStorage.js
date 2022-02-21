@@ -1,10 +1,10 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setItemAsync, getItemAsync, deleteItemAsync } from 'expo-secure-store';
 
 const MSG_ERROR = 'LocalStorage : An error has occurred';
 
 const getItem = async (name, functionError) => {
   try {
-    return await AsyncStorage.getItem(name);
+    return await getItemAsync(name);
   } catch (e) {
     functionError(MSG_ERROR);
   }
@@ -12,7 +12,7 @@ const getItem = async (name, functionError) => {
 
 const setItem = async (name, value, functionError) => {
   try {
-    return await AsyncStorage.setItem(name, value);
+    return await setItemAsync(name, value);
   } catch (e) {
     functionError(MSG_ERROR);
   }
@@ -20,7 +20,7 @@ const setItem = async (name, value, functionError) => {
 
 const removeItem = async (name, functionError) => {
   try {
-    return await AsyncStorage.removeItem(name);
+    return await deleteItemAsync(name);
   } catch (e) {
     functionError(MSG_ERROR);
   }
