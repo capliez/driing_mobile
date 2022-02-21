@@ -43,8 +43,10 @@ import {
   verifyTokenUserError,
   verifyTokenUserSuccess,
 } from './actions';
+import { nameTokenAuth } from '../../utils';
+import { STORAGE } from '../../utils/STORAGE';
 
-const MSG_ERROR = 'Auth : An error has occurred';
+export const MSG_ERROR = 'Auth : An error has occurred';
 
 /* SIGN IN */
 export function* watchLoginUser() {
@@ -68,7 +70,7 @@ function* loginWithEmailPassword({ payload }) {
       Axios.defaults.headers['Authorization'] = 'Bearer ' + token;
 
       if (remember) {
-        localStorage.setItem('authToken', token);
+        STORAGE.setItem(nameTokenAuth, token, loginUserError);
       }
 
       yield put(
@@ -98,7 +100,7 @@ const loginWithCookieAsync = async () =>
 
 function* loginWithCookie() {
   try {
-    const token = localStorage.getItem('authToken');
+    const token = STORAGE.getItem(nameTokenAuth, loginUserErrorCookie);
 
     const { exp: expiration } = jwtDecode(token);
 
@@ -112,15 +114,15 @@ function* loginWithCookie() {
         const userCurrent = result.data['hydra:member'][0];
         yield put(loginUserSuccessCookie(userCurrent));
       } else {
-        localStorage.removeItem('authToken');
+        STORAGE.removeItem(nameTokenAuth, loginUserErrorCookie);
         yield put(loginUserErrorCookie(MSG_ERROR));
       }
     } else {
-      localStorage.removeItem('authToken');
+      STORAGE.removeItem(nameTokenAuth, loginUserErrorCookie);
       yield put(loginUserErrorCookie(MSG_ERROR));
     }
   } catch (error) {
-    localStorage.removeItem('authToken');
+    STORAGE.removeItem(nameTokenAuth, loginUserErrorCookie);
     yield put(loginUserErrorCookie(MSG_ERROR));
   }
 }
@@ -131,9 +133,9 @@ export function* watchLogoutUser() {
 }
 
 const logoutAsync = async () => {
-  const token = localStorage.getItem('authToken');
+  const token = STORAGE.getItem(nameTokenAuth, loginUserErrorCookie);
   if (token) {
-    localStorage.removeItem('authToken');
+    STORAGE.removeItem(nameTokenAuth, loginUserErrorCookie);
   }
 };
 
