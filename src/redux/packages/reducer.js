@@ -1,15 +1,19 @@
 import {
   /* GET ALL */
-  GET_BUILDINGS,
-  GET_BUILDINGS_ERROR,
-  GET_BUILDINGS_SUCCESS,
+  GET_PACKAGES,
+  GET_PACKAGES_ERROR,
+  GET_PACKAGES_SUCCESS,
   /* GET FIND */
-  GET_BUILDING_CURRENT,
-  GET_BUILDING_CURRENT_ERROR,
-  GET_BUILDING_CURRENT_SUCCESS,
+  GET_PACKAGE_CURRENT,
+  GET_PACKAGE_CURRENT_ERROR,
+  GET_PACKAGE_CURRENT_SUCCESS,
+  /* POST */
+  REGISTER_PACKAGE,
+  REGISTER_PACKAGE_ERROR,
+  REGISTER_PACKAGE_SUCCESS,
   /* NOTIFICATION */
-  EMPTY_ERROR_BUILDING,
-  EMPTY_SUCCESS_BUILDING,
+  EMPTY_ERROR_PACKAGE,
+  EMPTY_SUCCESS_PACKAGE,
 } from '../action-types';
 
 const INIT_STATE = {
@@ -20,24 +24,24 @@ const INIT_STATE = {
   success: false,
 };
 
-export const BuildingReducer = (state = INIT_STATE, action) => {
+export const PackageReducer = (state = INIT_STATE, action) => {
   switch (action.type) {
     /* GET ALL */
-    case GET_BUILDINGS:
+    case GET_PACKAGES:
       return { ...state, loading: true };
-    case GET_BUILDINGS_SUCCESS:
+    case GET_PACKAGES_SUCCESS:
       return {
         ...state,
         loading: false,
         all: action.payload,
         error: null,
       };
-    case GET_BUILDINGS_ERROR:
+    case GET_PACKAGES_ERROR:
       return { ...state, error: action.payload, loading: false };
     /* GET FIND */
-    case GET_BUILDING_CURRENT:
+    case GET_PACKAGE_CURRENT:
       return { ...state, loading: true };
-    case GET_BUILDING_CURRENT_SUCCESS:
+    case GET_PACKAGE_CURRENT_SUCCESS:
       const indexCurrent = state.all.findIndex((c) => c.id === action.payload);
       return {
         ...state,
@@ -45,12 +49,24 @@ export const BuildingReducer = (state = INIT_STATE, action) => {
         current: indexCurrent !== -1 ? state.all[indexCurrent] : null,
         error: null,
       };
-    case GET_BUILDING_CURRENT_ERROR:
+    case GET_PACKAGE_CURRENT_ERROR:
       return { ...state, error: action.payload, loading: false };
+    /* POST */
+    case REGISTER_PACKAGE:
+      return { ...state, loading: true };
+    case REGISTER_PACKAGE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        success: true,
+        all: [action.payload].concat(state.all),
+      };
+    case REGISTER_PACKAGE_ERROR:
+      return { ...state, loading: false, error: action.payload };
     /* NOTIFICATION */
-    case EMPTY_SUCCESS_BUILDING:
+    case EMPTY_SUCCESS_PACKAGE:
       return { ...state, success: false };
-    case EMPTY_ERROR_BUILDING:
+    case EMPTY_ERROR_PACKAGE:
       return { ...state, error: null };
     default:
       return { ...state };
