@@ -45,7 +45,7 @@ export const loginUserSuccess = (user) => ({
 });
 export const loginUserError = (message) => ({
   type: LOGIN_USER_ERROR,
-  payload: { message },
+  payload: message,
 });
 
 /* SIGN IN WITH COOKIE */

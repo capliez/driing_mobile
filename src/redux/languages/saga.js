@@ -23,7 +23,7 @@ const getLanguagesAsync = async () =>
 function* getLanguages() {
   try {
     const result = yield call(getLanguagesAsync);
-    if (result.status === 200) {
+    if (result?.status === 200) {
       yield put(getLanguagesSuccess(result.data['hydra:member']));
     } else {
       yield put(getLanguagesError(MSG_ERROR));

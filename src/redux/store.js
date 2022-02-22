@@ -8,7 +8,7 @@ import {
   LOGIN_USER_ERROR_COOKIE,
   /* GET ALL LANGUAGES */ GET_LANGUAGES,
 } from '../redux/action-types';
-import { STORAGE } from '../../utils/STORAGE';
+import { STORAGE } from '../utils/localStorageSecure';
 import { nameTokenAuth } from '../utils';
 
 //Create Middleware Saga

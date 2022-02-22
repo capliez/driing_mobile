@@ -44,7 +44,7 @@ import {
   verifyTokenUserSuccess,
 } from './actions';
 import { nameTokenAuth } from '../../utils';
-import { STORAGE } from '../../utils/STORAGE';
+import { STORAGE } from '../../utils/localStorageSecure';
 
 export const MSG_ERROR = 'Auth : An error has occurred';
 
@@ -53,37 +53,50 @@ export function* watchLoginUser() {
   yield takeEvery(LOGIN_USER, loginWithEmailPassword);
 }
 
-const loginWithEmailPasswordAsync = async (email, password) =>
-  await Axios.post(LOGIN_API, { username: email, password })
-    .then((user) => user)
+const loginWithPhonePasswordAsync = async ({ phone, password }) =>
+  await Axios.post(LOGIN_API, { username: phone, password })
+    .then((result) => result)
     .catch((error) => error.response);
 
 function* loginWithEmailPassword({ payload }) {
-  const { email, password, remember } = payload;
   try {
-    const result = yield call(loginWithEmailPasswordAsync, email, password);
-    if (result.status === 200) {
+    const result = yield call(loginWithPhonePasswordAsync, payload);
+    console.log(result);
+    if (result?.status === 200) {
       const token = result.data.token;
 
-      const { id, lastName, firstName, email, roles, lang } = jwtDecode(token);
+      const { id, lastName, firstName, email, phone, roles, lang } =
+        jwtDecode(token);
 
       Axios.defaults.headers['Authorization'] = 'Bearer ' + token;
 
-      if (remember) {
+      if (payload.remember) {
         STORAGE.setItem(nameTokenAuth, token, loginUserError);
       }
 
       yield put(
-        loginUserSuccess({ id, lastName, firstName, email, roles, lang }),
+        loginUserSuccess({
+          id,
+          lastName,
+          firstName,
+          email,
+          phone,
+          roles,
+          lang,
+        }),
       );
     } else {
+      console.error('la');
       yield put(
         loginUserError(
-          result.data.message ? 'Les identifiants sont incorrects' : MSG_ERROR,
+          result?.data?.message
+            ? 'Les identifiants sont incorrects'
+            : MSG_ERROR,
         ),
       );
     }
   } catch (error) {
+    console.error(error);
     yield put(loginUserError(MSG_ERROR));
   }
 }

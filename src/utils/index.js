@@ -1,8 +1,9 @@
 import { Platform, StatusBar } from 'react-native';
 
-export const marginTop = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
-export const marginHorizontal =
-  Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
+export const marginTop = Platform.OS === 'ios' ? 15 : StatusBar.currentHeight;
+export const marginHorizontal = 15;
 
 export const defaultLocale = 'fr';
 export const nameTokenAuth = 'driing_auth';
+
+export const isNotEmpty = (data) => data !== null && data !== '';

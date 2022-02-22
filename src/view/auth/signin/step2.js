@@ -1,9 +1,10 @@
 import React, { lazy, useState } from 'react';
-import { marginHorizontal, marginTop } from '../../../utils';
+import { marginHorizontal, marginTop, isNotEmpty } from '../../../utils';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import InputText from '../../../components/_shared/inputText';
 import ButtonComponent from '../../../components/_shared/button';
-
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../../../redux/auth/actions';
 const HeaderLazyComponent = lazy(
   () => import('../../../components/_shared/headerPage'),
 );
@@ -13,22 +14,24 @@ const Step2SignIn = ({ navigation, changeStep, steps }) => {
     phone: '',
     password: '',
   });
+  const dispatch = useDispatch();
 
   const onChangeText = (name, text) => {
     setFields({ ...fields, [name]: text });
   };
 
   const onSubmit = () => {
-    console.log(fields);
+    if (isNotEmpty(fields.password) && isNotEmpty(fields.phone))
+      dispatch(loginUser(fields));
+    else alert('Merci de remplir les champs');
   };
-
   return (
     <SafeAreaView style={styles.main}>
       <View
         style={{
           flex: 1,
-          marginHorizontal: marginHorizontal,
-          marginTop: marginTop,
+          marginHorizontal,
+          marginVertical: marginTop,
           flexDirection: 'column',
           justifyContent: 'space-between',
         }}
@@ -60,7 +63,13 @@ const Step2SignIn = ({ navigation, changeStep, steps }) => {
         </View>
 
         <View>
-          <ButtonComponent onClick={onSubmit} text={'Valider'} />
+          <ButtonComponent
+            isDisabled={
+              !(isNotEmpty(fields.password) && isNotEmpty(fields.phone))
+            }
+            onClick={onSubmit}
+            text={'Valider'}
+          />
         </View>
       </View>
     </SafeAreaView>

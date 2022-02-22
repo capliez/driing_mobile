@@ -8,10 +8,8 @@ import { marginHorizontal, marginTop } from '../../../utils';
 
 const Step1Singin = ({ changeStep, steps }) => {
   return (
-    <SafeAreaView style={styles.main}>
-      <View
-        style={{ marginHorizontal: marginHorizontal, marginTop: marginTop }}
-      >
+    <SafeAreaView style={[styles.main, { paddingVertical: marginTop }]}>
+      <View style={{ marginHorizontal }}>
         <SvgXml
           title={'Logo Driing'}
           xml={LogoDriingImg}
@@ -19,7 +17,7 @@ const Step1Singin = ({ changeStep, steps }) => {
           height={26}
         />
       </View>
-      <View style={{ marginHorizontal: 15 }}>
+      <View style={{ marginHorizontal }}>
         <SvgXml
           title={'Image Driing'}
           xml={Step1SignInImg}
@@ -33,7 +31,7 @@ const Step1Singin = ({ changeStep, steps }) => {
           Vos tâches n’ont jamais été aussi simple
         </Text>
       </View>
-      <View style={{ marginHorizontal: 15 }}>
+      <View style={{ marginHorizontal }}>
         <ButtonComponent
           onClick={() => changeStep({ ...steps, step1: false, step2: true })}
           text={'Commencer'}

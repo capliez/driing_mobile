@@ -87,7 +87,7 @@ export const AuthReducer = (state = INIT_STATE, action) => {
         ...state,
         loading: false,
         currentUser: null,
-        error: action.payload.message,
+        error: action.payload,
       };
     /* FORGOT PASSWORD */
     case FORGOT_PASSWORD:
