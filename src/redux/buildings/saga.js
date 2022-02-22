@@ -29,6 +29,7 @@ const getBuildingsAsync = async () =>
 function* getBuildings() {
   try {
     const result = yield call(getBuildingsAsync);
+    console.log(result);
     if (result.status === 200) {
       yield put(getBuildingsSuccess(result.data['hydra:member']));
     } else {

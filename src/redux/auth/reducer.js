@@ -44,6 +44,7 @@ const INIT_STATE = {
   isVerifToken: false,
   isResetPassword: false,
   success: false,
+  loadingCookie: false,
 };
 
 export const AuthReducer = (state = INIT_STATE, action) => {
@@ -57,11 +58,12 @@ export const AuthReducer = (state = INIT_STATE, action) => {
       return { ...state, loading: false, error: action.payload };
     /* SIGN IN WITH COOKIE */
     case LOGIN_USER_COOKIE:
-      return { ...state, loading: true, error: '' };
+      return { ...state, loading: true, loadingCookie: true, error: '' };
     case LOGIN_USER_SUCCESS_COOKIE:
       return {
         ...state,
         loading: false,
+        loadingCookie: false,
         currentUser: action.payload,
         error: '',
       };
@@ -69,6 +71,7 @@ export const AuthReducer = (state = INIT_STATE, action) => {
       return {
         ...state,
         loading: false,
+        loadingCookie: false,
         currentUser: null,
         error: action.payload,
       };

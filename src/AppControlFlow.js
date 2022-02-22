@@ -5,18 +5,21 @@ import { Provider } from 'react-redux';
 import { configureStore } from './redux/store';
 import { LogBox } from 'react-native';
 import { Text } from 'react-native';
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 const AppControlFlow = () => {
   //Cacher les warnings
-  LogBox.ignoreAllLogs(true);
+  //LogBox.ignoreAllLogs(true);
   return (
-    <Provider store={configureStore()}>
-      <Suspense fallback={<Text>Je charge</Text>}>
-        <NavigationContainer>
-          <AppNavigator />
-        </NavigationContainer>
-      </Suspense>
-    </Provider>
+    <RootSiblingParent>
+      <Provider store={configureStore()}>
+        <Suspense fallback={<Text>Je charge</Text>}>
+          <NavigationContainer>
+            <AppNavigator />
+          </NavigationContainer>
+        </Suspense>
+      </Provider>
+    </RootSiblingParent>
   );
 };
 

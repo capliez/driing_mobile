@@ -5,7 +5,6 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import MenuBotom from '../../components/menuBottom';
 import { PACKAGES } from '../../constants/packages';
 import { marginHorizontal, marginTop } from '../../utils';
-
 const InputSearchComponent = lazy(
   () => import('../../components/_shared/inputSearch'),
 );

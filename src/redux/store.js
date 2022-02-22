@@ -33,12 +33,9 @@ export function configureStore() {
   const storeNew = store;
   sagaMiddleware.run(sagas);
 
-  const isUserCookie = STORAGE.getItem(nameTokenAuth, LOGIN_USER_ERROR_COOKIE);
-
-  if (isUserCookie)
-    store.dispatch({
-      type: LOGIN_USER_COOKIE,
-    });
+  store.dispatch({
+    type: LOGIN_USER_COOKIE,
+  });
 
   store.dispatch({
     type: GET_LANGUAGES,

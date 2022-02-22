@@ -10,7 +10,8 @@ import {
   SignInRoot,
 } from './constants/routes';
 import { useSelector } from 'react-redux';
-import { Text } from 'react-native';
+import ToastRedux from './toastRedux';
+import LoadingScreen from './components/loadingScreen';
 const Stack = createStackNavigator();
 
 const HomeScreen = lazy(() => import('./view/home'));
@@ -21,13 +22,13 @@ const ListResidentScreen = lazy(() => import('./view/resident/list'));
 const SignInScreen = lazy(() => import('./view/auth/signin'));
 
 export default () => {
-  const { currentUser, loading: loadingAuth } = useSelector(
+  const { currentUser, loadingCookie: loadingCookie } = useSelector(
     (state) => state.authUser,
   );
 
-  if (loadingAuth) {
-    // We haven't finished checking for the token yet
-    return <Text>JE charge </Text>;
+  //Si cookie authentification
+  if (loadingCookie) {
+    return <LoadingScreen />;
   }
 
   return (
@@ -38,6 +39,7 @@ export default () => {
         barStyle="dark-content"
         translucent
       />
+      <ToastRedux />
       <Stack.Navigator screenOptions={{ headerBackTitle: '', title: '' }}>
         {currentUser ? (
           <Fragment>

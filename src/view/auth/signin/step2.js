@@ -3,7 +3,7 @@ import { marginHorizontal, marginTop, isNotEmpty } from '../../../utils';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import InputText from '../../../components/_shared/inputText';
 import ButtonComponent from '../../../components/_shared/button';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../../../redux/auth/actions';
 const HeaderLazyComponent = lazy(
   () => import('../../../components/_shared/headerPage'),
@@ -15,7 +15,7 @@ const Step2SignIn = ({ navigation, changeStep, steps }) => {
     password: '',
   });
   const dispatch = useDispatch();
-
+  const { loading: loadingAuth } = useSelector((state) => state.authUser);
   const onChangeText = (name, text) => {
     setFields({ ...fields, [name]: text });
   };
@@ -25,6 +25,7 @@ const Step2SignIn = ({ navigation, changeStep, steps }) => {
       dispatch(loginUser(fields));
     else alert('Merci de remplir les champs');
   };
+  console.log(loadingAuth);
   return (
     <SafeAreaView style={styles.main}>
       <View
@@ -65,7 +66,8 @@ const Step2SignIn = ({ navigation, changeStep, steps }) => {
         <View>
           <ButtonComponent
             isDisabled={
-              !(isNotEmpty(fields.password) && isNotEmpty(fields.phone))
+              !(isNotEmpty(fields.password) && isNotEmpty(fields.phone)) ||
+              loadingAuth
             }
             onClick={onSubmit}
             text={'Valider'}

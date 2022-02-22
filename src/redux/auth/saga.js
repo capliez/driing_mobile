@@ -45,7 +45,7 @@ import {
 } from './actions';
 import { nameTokenAuth } from '../../utils';
 import { STORAGE } from '../../utils/localStorageSecure';
-
+import { getBuildings } from '../buildings/actions';
 export const MSG_ERROR = 'Auth : An error has occurred';
 
 /* SIGN IN */
@@ -61,18 +61,14 @@ const loginWithPhonePasswordAsync = async ({ phone, password }) =>
 function* loginWithEmailPassword({ payload }) {
   try {
     const result = yield call(loginWithPhonePasswordAsync, payload);
-    console.log(result);
     if (result?.status === 200) {
       const token = result.data.token;
-
       const { id, lastName, firstName, email, phone, roles, lang } =
         jwtDecode(token);
 
       Axios.defaults.headers['Authorization'] = 'Bearer ' + token;
 
-      if (payload.remember) {
-        STORAGE.setItem(nameTokenAuth, token, loginUserError);
-      }
+      yield STORAGE.setItem(nameTokenAuth, token, loginUserError);
 
       yield put(
         loginUserSuccess({
@@ -86,17 +82,11 @@ function* loginWithEmailPassword({ payload }) {
         }),
       );
     } else {
-      console.error('la');
       yield put(
-        loginUserError(
-          result?.data?.message
-            ? 'Les identifiants sont incorrects'
-            : MSG_ERROR,
-        ),
+        loginUserError(result?.data?.message ? result.data.message : MSG_ERROR),
       );
     }
   } catch (error) {
-    console.error(error);
     yield put(loginUserError(MSG_ERROR));
   }
 }
@@ -113,29 +103,33 @@ const loginWithCookieAsync = async () =>
 
 function* loginWithCookie() {
   try {
-    const token = STORAGE.getItem(nameTokenAuth, loginUserErrorCookie);
+    const token = yield STORAGE.getItem(nameTokenAuth);
+    if (token) {
+      const { exp: expiration } = jwtDecode(token);
 
-    const { exp: expiration } = jwtDecode(token);
+      if (expiration * 1000 > new Date().getTime()) {
+        //Si pas expiré on ajoute le token dans les requêtes axios
+        Axios.defaults.headers['Authorization'] = 'Bearer ' + token;
 
-    if (expiration * 1000 > new Date().getTime()) {
-      //Si pas expiré on ajoute le token dans les requêtes axios
-      Axios.defaults.headers['Authorization'] = 'Bearer ' + token;
+        const result = yield call(loginWithCookieAsync);
 
-      const result = yield call(loginWithCookieAsync);
-
-      if (result.status === 200) {
-        const userCurrent = result.data['hydra:member'][0];
-        yield put(loginUserSuccessCookie(userCurrent));
+        if (result.status === 200) {
+          const userCurrent = result.data['hydra:member'][0];
+          yield put(loginUserSuccessCookie(userCurrent));
+          yield put(getBuildings());
+        } else {
+          yield STORAGE.removeItem(nameTokenAuth, loginUserErrorCookie);
+          yield put(loginUserErrorCookie(MSG_ERROR));
+        }
       } else {
-        STORAGE.removeItem(nameTokenAuth, loginUserErrorCookie);
+        yield STORAGE.removeItem(nameTokenAuth, loginUserErrorCookie);
         yield put(loginUserErrorCookie(MSG_ERROR));
       }
     } else {
-      STORAGE.removeItem(nameTokenAuth, loginUserErrorCookie);
-      yield put(loginUserErrorCookie(MSG_ERROR));
+      yield put(loginUserErrorCookie(null));
     }
   } catch (error) {
-    STORAGE.removeItem(nameTokenAuth, loginUserErrorCookie);
+    yield STORAGE.removeItem(nameTokenAuth, loginUserErrorCookie);
     yield put(loginUserErrorCookie(MSG_ERROR));
   }
 }
