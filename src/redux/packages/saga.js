@@ -25,15 +25,15 @@ export function* watchGetPackages() {
   yield takeEvery(GET_PACKAGES, getPackages);
 }
 
-const getPackagesAsync = async () =>
-  await Axios.get(PACKAGES_API)
+const getPackagesAsync = async (idBuilding) =>
+  await Axios.get(`${PACKAGES_API}/handedover/${idBuilding}`)
     .then((result) => result)
     .catch((error) => error);
 
-function* getPackages() {
+function* getPackages({ payload }) {
   try {
-    const result = yield call(getPackagesAsync);
-    if (result.status === 200) {
+    const result = yield call(getPackagesAsync, payload);
+    if (result?.status === 200) {
       yield put(getPackagesSuccess(result.data['hydra:member']));
     } else {
       yield put(getPackagesError(MSG_ERROR));

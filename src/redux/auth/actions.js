@@ -20,6 +20,8 @@ import {
   LOGIN_USER_SUCCESS_COOKIE,
   /* LOG OUT */
   LOGOUT_USER,
+  LOGOUT_USER_SUCCESS,
+  LOGOUT_USER_ERROR,
   /* RESET PASSWORD */
   RESET_PASSWORD,
   RESET_PASSWORD_ERROR,
@@ -110,6 +112,14 @@ export const resetPasswordError = (message) => ({
 /* LOG OUT */
 export const logoutUser = () => ({
   type: LOGOUT_USER,
+});
+
+export const logoutUserSuccess = () => ({
+  type: LOGOUT_USER_SUCCESS,
+});
+
+export const logoutUserError = () => ({
+  type: LOGOUT_USER_ERROR,
 });
 
 /* VERIF TOKEN */

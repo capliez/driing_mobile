@@ -33,6 +33,9 @@ import {
   loginUserSuccess,
   loginUserSuccessCookie,
   loginUserError,
+  /* LOG OUT */
+  logoutUserError,
+  logoutUserSuccess,
   /* RESET PASSWORD */
   resetPasswordError,
   resetPasswordSuccess,
@@ -63,8 +66,16 @@ function* loginWithEmailPassword({ payload }) {
     const result = yield call(loginWithPhonePasswordAsync, payload);
     if (result?.status === 200) {
       const token = result.data.token;
-      const { id, lastName, firstName, email, phone, roles, lang } =
-        jwtDecode(token);
+      const {
+        id,
+        lastName,
+        firstName,
+        email,
+        phone,
+        roles,
+        lang,
+        isOnboarding,
+      } = jwtDecode(token);
 
       Axios.defaults.headers['Authorization'] = 'Bearer ' + token;
 
@@ -79,6 +90,7 @@ function* loginWithEmailPassword({ payload }) {
           phone,
           roles,
           lang,
+          isOnboarding,
         }),
       );
     } else {
@@ -140,14 +152,22 @@ export function* watchLogoutUser() {
 }
 
 const logoutAsync = async () => {
-  const token = STORAGE.getItem(nameTokenAuth, loginUserErrorCookie);
+  const token = await STORAGE.getItem(nameTokenAuth, loginUserErrorCookie);
   if (token) {
-    STORAGE.removeItem(nameTokenAuth, loginUserErrorCookie);
+    await STORAGE.removeItem(nameTokenAuth, loginUserErrorCookie);
+    return true;
   }
+
+  return false;
 };
 
 function* logout() {
-  yield call(logoutAsync);
+  try {
+    const result = yield call(logoutAsync);
+    if (result) yield put(logoutUserSuccess());
+  } catch (error) {
+    yield put(logoutUserError(MSG_ERROR));
+  }
 }
 
 /* FORGOT PASSWORD */
@@ -263,11 +283,11 @@ export function* watchUpdateUser() {
 }
 
 const updateUserAsync = async (item, id) => {
-  const { lang, avatar } = item;
+  const { lang, isOnboarding } = item;
 
   return await Axios.put(`${USERS_API}/${id}`, {
-    avatar: `/api/avatars/${avatar}`,
-    language: `/api/language/${lang}`,
+    language: `/api/languages/${lang}`,
+    isOnboarding,
   })
     .then((result) => result)
     .catch((error) => error.response);
@@ -286,22 +306,13 @@ const updateUserPasswordAsync = async (item, id) => {
 function* updateUser({ payload }) {
   const { item, id } = payload;
   try {
-    const user = item.security
+    const result = item.security
       ? yield call(updateUserPasswordAsync, item, id)
       : yield call(updateUserAsync, item, id);
-    if (user.status === 200) {
-      let newUser = user.data;
-      const newRoles = [];
-      newUser.userRoles.length > 0 &&
-        newUser.userRoles.map((r) => newRoles.push(r.name));
-      newUser.roles = newRoles;
-      yield put(updateUserSuccess(newUser));
+    if (result?.status === 200) {
+      yield put(updateUserSuccess(result.data));
     } else {
-      const message =
-        user.data.violations[0].propertyPath === 'email'
-          ? 'Cette adresse email est déjà utilisé'
-          : user.data.violations[0].message;
-      yield put(updateUserError(message));
+      yield put(updateUserError(MSG_ERROR));
     }
   } catch (error) {
     yield put(updateUserError(MSG_ERROR));

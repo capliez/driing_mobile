@@ -1,12 +1,18 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { DeliverListRoot } from '../../../constants/routes';
 import ImgPackage from '../../../images/packages/onePackage';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 
-const BlockDeliverPackage = ({ navigation }) => {
+const BlockDeliverPackage = ({ navigation, nbPackage, loading }) => {
   return (
     <Pressable onPress={() => navigation.navigate(DeliverListRoot)}>
       <View style={styles.divMain}>
@@ -25,7 +31,13 @@ const BlockDeliverPackage = ({ navigation }) => {
               width={46}
               height={35}
             />
-            <Text style={styles.textCount}>12</Text>
+            <Text style={styles.textCount}>
+              {loading ? (
+                <ActivityIndicator size="small" color="#000000" />
+              ) : (
+                nbPackage
+              )}
+            </Text>
           </View>
         </View>
         <View style={styles.divLast}>
@@ -76,6 +88,8 @@ const styles = StyleSheet.create({
 
 BlockDeliverPackage.propTypes = {
   navigation: PropTypes.object,
+  nbPackage: PropTypes.number,
+  loading: PropTypes.bool,
 };
 
 export default BlockDeliverPackage;

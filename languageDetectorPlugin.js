@@ -6,7 +6,7 @@ const STORE_LANGUAGE_KEY = 'settings.lang';
 const languageDetectorPlugin = {
   type: 'languageDetector',
   async: true,
-  init: () => {},
+  init: () => { },
   detect: async function (callback) {
     try {
       //get stored language from Async storage
@@ -27,7 +27,7 @@ const languageDetectorPlugin = {
     try {
       //save a user's language choice in Async storage
       await AsyncStorage.setItem(STORE_LANGUAGE_KEY, language);
-    } catch (error) {}
+    } catch (error) { }
   },
 };
 

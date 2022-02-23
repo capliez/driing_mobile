@@ -11,8 +11,8 @@ const HeaderLazyComponent = lazy(
 
 const Step2SignIn = ({ navigation, changeStep, steps }) => {
   const [fields, setFields] = useState({
-    phone: '',
-    password: '',
+    phone: '0602231075',
+    password: 'Password77!',
   });
   const dispatch = useDispatch();
   const { loading: loadingAuth } = useSelector((state) => state.authUser);
@@ -25,7 +25,7 @@ const Step2SignIn = ({ navigation, changeStep, steps }) => {
       dispatch(loginUser(fields));
     else alert('Merci de remplir les champs');
   };
-  console.log(loadingAuth);
+
   return (
     <SafeAreaView style={styles.main}>
       <View

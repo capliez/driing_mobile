@@ -20,6 +20,8 @@ import {
   LOGIN_USER_SUCCESS_COOKIE,
   /* LOG OUT */
   LOGOUT_USER,
+  LOGOUT_USER_ERROR,
+  LOGOUT_USER_SUCCESS,
   /* RESET PASSWORD */
   RESET_PASSWORD,
   RESET_PASSWORD_ERROR,
@@ -45,6 +47,7 @@ const INIT_STATE = {
   isResetPassword: false,
   success: false,
   loadingCookie: false,
+  loadingLogout: false,
 };
 
 export const AuthReducer = (state = INIT_STATE, action) => {
@@ -138,16 +141,24 @@ export const AuthReducer = (state = INIT_STATE, action) => {
       return { ...state, loading: false, error: action.payload };
     /* LOG OUT */
     case LOGOUT_USER:
-      return { ...state, currentUser: null, error: '' };
+      return { ...state, error: '', loadingLogout: true };
+    case LOGOUT_USER_SUCCESS:
+      return {
+        ...state,
+        currentUser: null,
+        error: '',
+        loadingLogout: false,
+      };
+    case LOGOUT_USER_ERROR:
+      return { ...state, error: '', loadingLogout: false };
     /* UPDATE */
     case UPDATE_USER:
       return { ...state, loading: true, isUpdate: true };
     case UPDATE_USER_SUCCESS:
-      const item = action.payload;
       return {
         ...state,
         loading: false,
-        currentUser: item,
+        currentUser: action.payload,
         success: true,
         isUpdate: false,
       };

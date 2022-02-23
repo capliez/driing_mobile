@@ -1,10 +1,22 @@
 import PropTypes from 'prop-types';
 import React, { lazy, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  Button,
+} from 'react-native';
 import MenuBotom from '../../components/menuBottom';
 import { PACKAGES } from '../../constants/packages';
-import { marginHorizontal, marginTop } from '../../utils';
+import { isNotEmpty, marginHorizontal, marginTop } from '../../utils';
+import { useSelector, useDispatch } from 'react-redux';
+import { getPackages } from '../../redux/packages/actions';
+import { logoutUser } from '../../redux/auth/actions';
+import { useEffect } from 'react';
+import { SignInRoot } from '../../constants/routes';
 const InputSearchComponent = lazy(
   () => import('../../components/_shared/inputSearch'),
 );
@@ -28,9 +40,19 @@ const ItemResidentLazyComponent = lazy(
 );
 
 const HomePage = ({ navigation }) => {
-  const [showRealApp, setShowRealApp] = useState(true);
   const [searchTerm, onChangeText] = React.useState('');
   const { t } = useTranslation(['deliver', 'translations']);
+  const { all: allPackages, loading: loadingPackage } = useSelector(
+    (state) => state.packages,
+  );
+  const { all: allBuildings } = useSelector((state) => state.buildings);
+  const { currentUser } = useSelector((state) => state.authUser);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    isNotEmpty(allBuildings) && dispatch(getPackages(allBuildings.id));
+  }, [allBuildings, dispatch]);
 
   const filterList = () => {
     return PACKAGES.filter((p) => {
@@ -41,18 +63,14 @@ const HomePage = ({ navigation }) => {
       return fullName.toLowerCase().includes(searchTerm.toLowerCase());
     });
   };
+
   const renderGridList = () =>
     filterList().map((p) => (
       <ItemResidentLazyComponent navigation={navigation} key={p.id} item={p} />
     ));
 
-  if (!showRealApp) {
-    return (
-      <OnBoardingComponent
-        showRealApp={showRealApp}
-        setShowRealApp={setShowRealApp}
-      />
-    );
+  if (!currentUser.isOnboarding) {
+    return <OnBoardingComponent user={currentUser} />;
   }
 
   return (
@@ -62,7 +80,7 @@ const HomePage = ({ navigation }) => {
           <Trans
             i18nKey="userWelcome"
             defaults="<1>Bonjour {{name}}</1>"
-            values={{ name: 'Claude' }}
+            values={{ name: currentUser.firstName }}
             components={{
               1: (
                 <Text
@@ -72,6 +90,12 @@ const HomePage = ({ navigation }) => {
                 />
               ),
             }}
+          />
+          <Button
+            onPress={() => {
+              dispatch(logoutUser());
+            }}
+            title="deconnexion"
           />
         </View>
         <InputSearchComponent value={searchTerm} onChangeText={onChangeText} />
@@ -99,7 +123,11 @@ const HomePage = ({ navigation }) => {
             <View style={{ marginTop: 20 }}>
               <Text style={styles.textTitle}>Où en êtes-vous ?</Text>
             </View>
-            <BlockDeliverPackageComponent navigation={navigation} />
+            <BlockDeliverPackageComponent
+              navigation={navigation}
+              loading={loadingPackage}
+              nbPackage={allPackages && allPackages.length}
+            />
             <View style={{ marginTop: 20 }}>
               <Text style={styles.textTitle}>
                 Besoin de contacter votre syndic ?

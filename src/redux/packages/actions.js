@@ -17,8 +17,9 @@ import {
 } from '../action-types';
 
 /* GET ALL */
-export const getPackages = () => ({
+export const getPackages = (id) => ({
   type: GET_PACKAGES,
+  payload: id,
 });
 export const getPackagesSuccess = (buildings) => ({
   type: GET_PACKAGES_SUCCESS,

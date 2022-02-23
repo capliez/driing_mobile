@@ -1,4 +1,4 @@
-export const API_URL = 'http://192.168.1.44:8000/api/';
+export const API_URL = 'http://192.168.1.122:8000/api/';
 export const SITE_URL = 'https://127.0.0.1:8000/';
 
 /* AUTH */
@@ -15,4 +15,4 @@ export const BUILDINGS_API = API_URL + 'buildings';
 export const RESIDENTS_API = API_URL + 'residents';
 
 /* PACKAGES */
-export const PACKAGFES_API = API_URL + 'packages';
+export const PACKAGES_API = API_URL + 'packages';

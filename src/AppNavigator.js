@@ -10,9 +10,11 @@ import {
   SignInRoot,
 } from './constants/routes';
 import { useSelector } from 'react-redux';
-import ToastRedux from './toastRedux';
+import ToastGeneral from './toastGeneral';
 import LoadingScreen from './components/loadingScreen';
+
 const Stack = createStackNavigator();
+const StackLogin = createStackNavigator();
 
 const HomeScreen = lazy(() => import('./view/home'));
 const ListDeliverScreen = lazy(() => import('./view/deliver/list'));
@@ -22,9 +24,11 @@ const ListResidentScreen = lazy(() => import('./view/resident/list'));
 const SignInScreen = lazy(() => import('./view/auth/signin'));
 
 export default () => {
-  const { currentUser, loadingCookie: loadingCookie } = useSelector(
-    (state) => state.authUser,
-  );
+  const {
+    currentUser,
+    loadingCookie: loadingCookie,
+    loadingLogout,
+  } = useSelector((state) => state.authUser);
 
   //Si cookie authentification
   if (loadingCookie) {
@@ -33,62 +37,65 @@ export default () => {
 
   return (
     <>
+      <ToastGeneral />
       <StatusBar
         animated
         backgroundColor="transparent"
         barStyle="dark-content"
         translucent
       />
-      <ToastRedux />
-      <Stack.Navigator screenOptions={{ headerBackTitle: '', title: '' }}>
-        {currentUser ? (
-          <Fragment>
-            <Stack.Screen
-              name={HomeRoot}
-              component={HomeScreen}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name={DeliverListRoot}
-              component={ListDeliverScreen}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name={DeliverCurrentRoot}
-              component={CurrentDeliverScreen}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name={AddPackageRoot}
-              component={AddPackageScreen}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name={ResidentListRoot}
-              component={ListResidentScreen}
-              options={{
-                headerShown: false,
-              }}
-            />
-          </Fragment>
-        ) : (
+
+      {!loadingLogout && currentUser !== null ? (
+        <Stack.Navigator screenOptions={{ headerBackTitle: '', title: '' }}>
           <Stack.Screen
+            name={HomeRoot}
+            component={HomeScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name={DeliverListRoot}
+            component={ListDeliverScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name={DeliverCurrentRoot}
+            component={CurrentDeliverScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name={AddPackageRoot}
+            component={AddPackageScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name={ResidentListRoot}
+            component={ListResidentScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+        </Stack.Navigator>
+      ) : (
+        <StackLogin.Navigator
+          screenOptions={{ headerBackTitle: '', title: '' }}
+        >
+          <StackLogin.Screen
             name={SignInRoot}
             component={SignInScreen}
             options={{
               headerShown: false,
             }}
           />
-        )}
-      </Stack.Navigator>
+        </StackLogin.Navigator>
+      )}
     </>
   );
 };

@@ -8,9 +8,12 @@ import logo from '../../images/onboarding/logo';
 import step1 from '../../images/onboarding/step1';
 import step2 from '../../images/onboarding/step2';
 import step3 from '../../images/onboarding/step3';
+import { updateUser } from '../../redux/auth/actions';
+import { useDispatch } from 'react-redux';
 
-const OnBoarding = ({ setShowRealApp, showRealApp }) => {
+const OnBoarding = ({ user }) => {
   const { t } = useTranslation(['onBoarding, button']);
+  const dispatch = useDispatch();
 
   const slides = [
     {
@@ -89,7 +92,9 @@ const OnBoarding = ({ setShowRealApp, showRealApp }) => {
   };
 
   const _onDone = () => {
-    setShowRealApp(true);
+    dispatch(
+      updateUser({ isOnboarding: true, lang: user.language.id }, user.id),
+    );
   };
 
   const _keyExtractor = (item) => item.title;

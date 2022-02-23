@@ -31,7 +31,6 @@ import profilIcon from '../../images/menu/profil';
 
 const MenuBotom = ({ navigation }) => {
   const marginTop = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
-  const marginBottom = Platform.OS === 'ios' ? 30 : StatusBar.currentHeight;
   const { t } = useTranslation('menu');
   const [indexCurrent, setIndexCurrent] = useState(navigation.getState().index);
   const [routeCurrent, setRouteCurrent] = useState(
@@ -87,8 +86,7 @@ const MenuBotom = ({ navigation }) => {
       style={{
         position: 'absolute',
         bottom: 0,
-        paddingBottom: marginBottom,
-        paddingHorizontal: marginBottom,
+        paddingHorizontal: 30,
         width: '100%',
         backgroundColor: 'white',
       }}
@@ -97,10 +95,10 @@ const MenuBotom = ({ navigation }) => {
 
       <View
         style={{
-          marginTop,
+          paddingVertical: 30,
+
           flexDirection: 'row',
           justifyContent: 'space-between',
-          paddingHorizontal: 16,
         }}
       >
         {itemMenu.map((m) => (
