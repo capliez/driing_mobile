@@ -3,27 +3,18 @@ import { useTranslation } from 'react-i18next';
 import { RefreshControl } from 'react-native';
 import PropTypes from 'prop-types';
 
-const wait = (timeout) => {
-  return new Promise((resolve) => setTimeout(resolve, timeout));
-};
-
-const RefreshControlComponent = ({ onRefreshControl }) => {
-  const [refreshing, setRefreshing] = React.useState(false);
+const RefreshControlComponent = ({ onRefreshControl, loading }) => {
   const { t } = useTranslation();
   const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    wait(2000).then(() => {
-      setRefreshing(false);
-      onRefreshControl && onRefreshControl();
-    });
-  }, []);
+    onRefreshControl && onRefreshControl();
+  }, [onRefreshControl]);
 
   return (
     <RefreshControl
       title={t('loading')}
       tintColor={'#222235'}
       colors={['#222235']}
-      refreshing={refreshing}
+      refreshing={loading}
       onRefresh={onRefresh}
     />
   );
@@ -31,6 +22,7 @@ const RefreshControlComponent = ({ onRefreshControl }) => {
 
 RefreshControlComponent.propTypes = {
   onRefreshControl: PropTypes.func,
+  loading: PropTypes.bool,
 };
 
 export default RefreshControlComponent;

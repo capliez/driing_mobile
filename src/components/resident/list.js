@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
-import React, { Fragment, lazy } from 'react';
+import React, { lazy } from 'react';
 import { Text, View, FlatList } from 'react-native';
-import { PACKAGES } from '../../constants/packages';
+import RefreshControlComponent from '../../components/_shared/refreshControl';
+import { getResidents } from '../../redux/residents/actions';
+import { useDispatch } from 'react-redux';
 
 const NoPackageLazyComponent = lazy(() => import('../deliver/noPackage'));
 
@@ -9,11 +11,17 @@ const InputSearchLazyComponent = lazy(() => import('../_shared/inputSearch'));
 
 const ItemLazyComponent = lazy(() => import('./item'));
 
-const ListResidentComponent = ({ packages, t, navigation }) => {
+const ListResidentComponent = ({
+  residents,
+  t,
+  navigation,
+  idBuilding,
+  loadingResidents,
+}) => {
   const [searchTerm, onChangeText] = React.useState('');
-
+  const dispatch = useDispatch();
   const filterList = () => {
-    return packages.filter((p) => {
+    return residents.filter((p) => {
       const fullName = p.lastName
         ? `${p.firstName} ${p.lastName}`
         : p.firstName;
@@ -29,14 +37,20 @@ const ListResidentComponent = ({ packages, t, navigation }) => {
         onChangeText={onChangeText}
       />
 
-      {PACKAGES ? (
+      {residents ? (
         <View style={{ marginVertical: 15, flex: 1 }}>
-          {packages && packages.length > 0 ? (
+          {residents && residents.length > 0 ? (
             <FlatList
               data={filterList()}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{ paddingBottom: 90 }}
               keyExtractor={(item) => item.id.toString()}
+              refreshControl={
+                <RefreshControlComponent
+                  loading={loadingResidents}
+                  onRefreshControl={() => dispatch(getResidents(idBuilding))}
+                />
+              }
               renderItem={({ item }) => (
                 <ItemLazyComponent
                   navigation={navigation}
@@ -63,9 +77,11 @@ const ListResidentComponent = ({ packages, t, navigation }) => {
 };
 
 ListResidentComponent.propTypes = {
-  packages: PropTypes.array,
+  residents: PropTypes.array,
   t: PropTypes.any,
   navigation: PropTypes.object,
+  idBuilding: PropTypes.number,
+  loadingResidents: PropTypes.bool,
 };
 
 export default ListResidentComponent;

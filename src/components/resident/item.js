@@ -41,7 +41,7 @@ const ItemResident = ({ item, navigation, onClick }) => {
               accessibilityLabel={item.nbPackage}
               style={styles.textItemValue}
             >
-              {item.nbPackage}
+              {item.countPackages}
             </Text>
           </View>
           <View
@@ -65,7 +65,7 @@ const ItemResident = ({ item, navigation, onClick }) => {
               format="DD.MM.YYYY hh:mm"
               element={Text}
             >
-              {item.date}
+              {item.createdAt}
             </Moment>
           </View>
         </View>

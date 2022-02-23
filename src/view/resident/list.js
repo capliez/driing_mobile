@@ -1,9 +1,12 @@
 import PropTypes from 'prop-types';
-import React, { lazy } from 'react';
+import React, { lazy, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PACKAGES } from '../../constants/packages';
 import { HomeRoot } from '../../constants/routes';
 import LayoutDefault from '../../layout';
+import { useSelector, useDispatch } from 'react-redux';
+import { getResidents } from '../../redux/residents/actions';
+import { isNotEmpty } from '../../utils';
 
 const HeaderLazyComponent = lazy(
   () => import('../../components/_shared/headerPage'),
@@ -15,6 +18,19 @@ const ListResidentLazyComponent = lazy(
 
 const ListResident = ({ navigation }) => {
   const { t } = useTranslation('resident');
+  const dispatch = useDispatch();
+  const { all: allBuildings, loading: loadingBuilding } = useSelector(
+    (state) => state.buildings,
+  );
+  const { all: allResidents, loading: loadingResidents } = useSelector(
+    (state) => state.residents,
+  );
+
+  useEffect(() => {
+    if (!loadingBuilding && isNotEmpty(allBuildings)) {
+      dispatch(getResidents(allBuildings.id));
+    }
+  }, [allBuildings, dispatch, loadingBuilding]);
 
   return (
     <LayoutDefault navigation={navigation}>
@@ -25,7 +41,9 @@ const ListResident = ({ navigation }) => {
       />
       <ListResidentLazyComponent
         t={t}
-        packages={PACKAGES}
+        idBuilding={allBuildings?.id}
+        residents={allResidents}
+        loadingResidents={loadingResidents}
         navigation={navigation}
       />
     </LayoutDefault>

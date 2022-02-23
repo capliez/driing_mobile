@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { lazy, useState } from 'react';
+import React, { lazy, useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import {
   SafeAreaView,
@@ -14,9 +14,9 @@ import { PACKAGES } from '../../constants/packages';
 import { isNotEmpty, marginHorizontal, marginTop } from '../../utils';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPackages } from '../../redux/packages/actions';
-import { logoutUser } from '../../redux/auth/actions';
-import { useEffect } from 'react';
-import { SignInRoot } from '../../constants/routes';
+import { getResidents } from '../../redux/residents/actions';
+import RefreshControlComponent from '../../components/_shared/refreshControl';
+
 const InputSearchComponent = lazy(
   () => import('../../components/_shared/inputSearch'),
 );
@@ -45,17 +45,24 @@ const HomePage = ({ navigation }) => {
   const { all: allPackages, loading: loadingPackage } = useSelector(
     (state) => state.packages,
   );
-  const { all: allBuildings } = useSelector((state) => state.buildings);
+  const { all: allBuildings, loading: loadingBuilding } = useSelector(
+    (state) => state.buildings,
+  );
+  const { all: allResidents } = useSelector((state) => state.residents);
+
   const { currentUser } = useSelector((state) => state.authUser);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    isNotEmpty(allBuildings) && dispatch(getPackages(allBuildings.id));
-  }, [allBuildings, dispatch]);
+    if (!loadingBuilding && isNotEmpty(allBuildings)) {
+      dispatch(getPackages(allBuildings.id));
+      dispatch(getResidents(allBuildings.id));
+    }
+  }, [allBuildings, dispatch, loadingBuilding]);
 
   const filterList = () => {
-    return PACKAGES.filter((p) => {
+    return allResidents.filter((p) => {
       const fullName = p.lastName
         ? `${p.firstName} ${p.lastName}`
         : p.firstName;
@@ -91,12 +98,6 @@ const HomePage = ({ navigation }) => {
               ),
             }}
           />
-          <Button
-            onPress={() => {
-              dispatch(logoutUser());
-            }}
-            title="deconnexion"
-          />
         </View>
         <InputSearchComponent value={searchTerm} onChangeText={onChangeText} />
         {searchTerm ? (
@@ -118,6 +119,14 @@ const HomePage = ({ navigation }) => {
             contentContainerStyle={{ paddingBottom: 100 }}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
+            refreshControl={
+              <RefreshControlComponent
+                loading={loadingPackage}
+                onRefreshControl={() =>
+                  allBuildings ? dispatch(getPackages(allBuildings.id)) : null
+                }
+              />
+            }
           >
             <BlockAddPackageComponent navigation={navigation} />
             <View style={{ marginTop: 20 }}>
@@ -126,7 +135,7 @@ const HomePage = ({ navigation }) => {
             <BlockDeliverPackageComponent
               navigation={navigation}
               loading={loadingPackage}
-              nbPackage={allPackages && allPackages.length}
+              nbPackage={allPackages ? allPackages.length : 0}
             />
             <View style={{ marginTop: 20 }}>
               <Text style={styles.textTitle}>

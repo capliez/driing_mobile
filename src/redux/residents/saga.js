@@ -29,14 +29,14 @@ export function* watchGetResidents() {
   yield takeEvery(GET_RESIDENTS, getResidents);
 }
 
-const getResidentsAsync = async () =>
-  await Axios.get(RESIDENTS_API)
+const getResidentsAsync = async (id) =>
+  await Axios.get(`${RESIDENTS_API}/building/${id}`)
     .then((result) => result)
     .catch((error) => error);
 
-function* getResidents() {
+function* getResidents({ payload }) {
   try {
-    const result = yield call(getResidentsAsync);
+    const result = yield call(getResidentsAsync, payload);
     if (result.status === 200) {
       yield put(getResidentsSuccess(result.data['hydra:member']));
     } else {

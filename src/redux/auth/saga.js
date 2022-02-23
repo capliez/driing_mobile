@@ -66,39 +66,26 @@ function* loginWithEmailPassword({ payload }) {
     const result = yield call(loginWithPhonePasswordAsync, payload);
     if (result?.status === 200) {
       const token = result.data.token;
-      const {
-        id,
-        lastName,
-        firstName,
-        email,
-        phone,
-        roles,
-        lang,
-        isOnboarding,
-      } = jwtDecode(token);
 
       Axios.defaults.headers['Authorization'] = 'Bearer ' + token;
 
       yield STORAGE.setItem(nameTokenAuth, token, loginUserError);
 
-      yield put(
-        loginUserSuccess({
-          id,
-          lastName,
-          firstName,
-          email,
-          phone,
-          roles,
-          lang,
-          isOnboarding,
-        }),
-      );
+      try {
+        const result = yield call(loginWithCookieAsync);
+        if (result?.status === 200)
+          yield put(loginUserSuccess(result.data['hydra:member'][0]));
+        else yield put(loginUserError(MSG_ERROR));
+      } catch (error) {
+        yield put(loginUserError(MSG_ERROR));
+      }
     } else {
       yield put(
         loginUserError(result?.data?.message ? result.data.message : MSG_ERROR),
       );
     }
   } catch (error) {
+    console.log(error);
     yield put(loginUserError(MSG_ERROR));
   }
 }
@@ -125,7 +112,7 @@ function* loginWithCookie() {
 
         const result = yield call(loginWithCookieAsync);
 
-        if (result.status === 200) {
+        if (result?.status === 200) {
           const userCurrent = result.data['hydra:member'][0];
           yield put(loginUserSuccessCookie(userCurrent));
           yield put(getBuildings());

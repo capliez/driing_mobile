@@ -21,8 +21,9 @@ import {
 } from '../action-types';
 
 /* GET ALL */
-export const getResidents = () => ({
+export const getResidents = (idBuilding) => ({
   type: GET_RESIDENTS,
+  payload: idBuilding,
 });
 export const getResidentsSuccess = (buildings) => ({
   type: GET_RESIDENTS_SUCCESS,

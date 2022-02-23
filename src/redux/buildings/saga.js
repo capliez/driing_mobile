@@ -30,7 +30,13 @@ function* getBuildings() {
   try {
     const result = yield call(getBuildingsAsync);
     if (result.status === 200) {
-      yield put(getBuildingsSuccess(result.data['hydra:member'][0]));
+      yield put(
+        getBuildingsSuccess(
+          result.data['hydra:member'].length > 0
+            ? result.data['hydra:member'][0]
+            : null,
+        ),
+      );
     } else {
       yield put(getBuildingsError(MSG_ERROR));
     }
