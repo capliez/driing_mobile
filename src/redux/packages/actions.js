@@ -14,16 +14,34 @@ import {
   /* NOTIFICATION */
   EMPTY_ERROR_PACKAGE,
   EMPTY_SUCCESS_PACKAGE,
+  /* GET NB PACKAGES NO HANDED OVER */
+  GET_PACKAGES_COUNT_NO_HANDEDOVER,
+  GET_PACKAGES_COUNT_NO_HANDEDOVER_SUCCESS,
+  GET_PACKAGES_COUNT_NO_HANDEDOVER_ERROR,
 } from '../action-types';
+
+/* GET NB PACKAGES NO HANDED OVER */
+export const getPackagesNoHandedOver = (id) => ({
+  type: GET_PACKAGES_COUNT_NO_HANDEDOVER,
+  payload: id,
+});
+export const getPackagesNoHandedOverSuccess = (buildings) => ({
+  type: GET_PACKAGES_COUNT_NO_HANDEDOVER_SUCCESS,
+  payload: buildings,
+});
+export const getPackagesNoHandedOverError = (message) => ({
+  type: GET_PACKAGES_COUNT_NO_HANDEDOVER_ERROR,
+  payload: message,
+});
 
 /* GET ALL */
 export const getPackages = (id) => ({
   type: GET_PACKAGES,
   payload: id,
 });
-export const getPackagesSuccess = (buildings) => ({
+export const getPackagesSuccess = (packages) => ({
   type: GET_PACKAGES_SUCCESS,
-  payload: buildings,
+  payload: packages,
 });
 export const getPackagesError = (message) => ({
   type: GET_PACKAGES_ERROR,

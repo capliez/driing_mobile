@@ -9,19 +9,18 @@ const NoPackage = ({ navigation }) => {
   return (
     <View style={styles.divMain}>
       <SvgXml
-        title={'Aucun colis en attente'}
+        title={'Aucun résident en attente'}
         xml={ImgNoPackage}
         width={195}
         height={250}
       />
-      <Text style={styles.text1}>Aucun colis en attente actuellement !</Text>
+      <Text style={styles.text1}>Aucun résident actuellement !</Text>
       <Text style={styles.text2}>
-        N’oubliez pas d’ajouter les colis de vos résidents afin de les mettre à
-        la liste.
+        N’oubliez pas d’ajouter des résidents afin de les mettre à la liste.
       </Text>
       <ButtonComponent
         onClick={() => navigation.navigate(AddPackageRoot)}
-        text={'Ajouter un colis'}
+        text={'Ajouter un résident'}
         classBtn={{ width: '100%' }}
       />
     </View>

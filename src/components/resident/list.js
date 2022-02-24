@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { lazy } from 'react';
 import { Text, View, FlatList } from 'react-native';
-import RefreshControlComponent from '../../components/_shared/refreshControl';
 import { getResidents } from '../../redux/residents/actions';
 import { useDispatch } from 'react-redux';
 
-const NoPackageLazyComponent = lazy(() => import('../deliver/noPackage'));
+const NoResidentLazyComponent = lazy(() => import('../resident/noResident'));
 
 const InputSearchLazyComponent = lazy(() => import('../_shared/inputSearch'));
 
@@ -42,15 +41,11 @@ const ListResidentComponent = ({
           {residents && residents.length > 0 ? (
             <FlatList
               data={filterList()}
+              onRefresh={() => dispatch(getResidents(idBuilding))}
+              refreshing={loadingResidents}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{ paddingBottom: 90 }}
               keyExtractor={(item) => item.id.toString()}
-              refreshControl={
-                <RefreshControlComponent
-                  loading={loadingResidents}
-                  onRefreshControl={() => dispatch(getResidents(idBuilding))}
-                />
-              }
               renderItem={({ item }) => (
                 <ItemLazyComponent
                   navigation={navigation}
@@ -70,7 +65,7 @@ const ListResidentComponent = ({
           )}
         </View>
       ) : (
-        <NoPackageLazyComponent navigation={navigation} />
+        <NoResidentLazyComponent navigation={navigation} />
       )}
     </>
   );

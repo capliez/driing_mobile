@@ -11,11 +11,10 @@ const InputSearchLazyComponent = lazy(() => import('../_shared/inputSearch'));
 
 const ItemDeliverLazyComponent = lazy(() => import('./item'));
 
-const ListDeliverComponent = ({ packages, t, navigation }) => {
+const ListDeliverComponent = ({ dates, t, navigation }) => {
   const [searchTerm, onChangeText] = React.useState('');
-
   const filterList = () => {
-    return packages.filter((p) => {
+    return dates[0].filter((p) => {
       const fullName = p.lastName
         ? `${p.firstName} ${p.lastName}`
         : p.firstName;
@@ -31,31 +30,17 @@ const ListDeliverComponent = ({ packages, t, navigation }) => {
         onChangeText={onChangeText}
       />
 
-      {PACKAGES ? (
+      {dates ? (
         <View style={{ marginVertical: 15, flex: 1 }}>
-          {packages && packages.length > 0 ? (
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ paddingBottom: 90 }}
-              data={filterList()}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={(item) => (
-                <ItemDeliverLazyComponent
-                  navigation={navigation}
-                  key={item.id}
-                  item={item}
-                />
-              )}
-            />
-          ) : (
-            <Text
-              accessible
-              accessibilityRole="text"
-              accessibilityLabel={t('textNoPackagesPending')}
-            >
-              {t('textNoPackagesPending')}
-            </Text>
-          )}
+          {dates &&
+            Object.entries(dates[0]).map((i) => (
+              <ItemDeliverLazyComponent
+                navigation={navigation}
+                date={i[0]}
+                key={i[0]}
+                packages={i[1]}
+              />
+            ))}
         </View>
       ) : (
         <NoPackageLazyComponent navigation={navigation} />

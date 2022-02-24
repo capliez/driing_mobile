@@ -7,15 +7,14 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
+  RefreshControl,
 } from 'react-native';
 import MenuBotom from '../../components/menuBottom';
 import { PACKAGES } from '../../constants/packages';
 import { isNotEmpty, marginHorizontal, marginTop } from '../../utils';
 import { useSelector, useDispatch } from 'react-redux';
-import { getPackages } from '../../redux/packages/actions';
+import { getPackagesNoHandedOver } from '../../redux/packages/actions';
 import { getResidents } from '../../redux/residents/actions';
-import RefreshControlComponent from '../../components/_shared/refreshControl';
 
 const InputSearchComponent = lazy(
   () => import('../../components/_shared/inputSearch'),
@@ -42,9 +41,8 @@ const ItemResidentLazyComponent = lazy(
 const HomePage = ({ navigation }) => {
   const [searchTerm, onChangeText] = React.useState('');
   const { t } = useTranslation(['deliver', 'translations']);
-  const { all: allPackages, loading: loadingPackage } = useSelector(
-    (state) => state.packages,
-  );
+  const { nbHandedOver: nbHandedOverPackages, loading: loadingPackage } =
+    useSelector((state) => state.packages);
   const { all: allBuildings, loading: loadingBuilding } = useSelector(
     (state) => state.buildings,
   );
@@ -56,17 +54,21 @@ const HomePage = ({ navigation }) => {
 
   useEffect(() => {
     if (!loadingBuilding && isNotEmpty(allBuildings)) {
-      dispatch(getPackages(allBuildings.id));
-      dispatch(getResidents(allBuildings.id));
+      !isNotEmpty(nbHandedOverPackages) &&
+        dispatch(getPackagesNoHandedOver(allBuildings.id));
+      !isNotEmpty(allResidents) && dispatch(getResidents(allBuildings.id));
     }
-  }, [allBuildings, dispatch, loadingBuilding]);
+  }, [
+    allBuildings,
+    nbHandedOverPackages,
+    allResidents,
+    dispatch,
+    loadingBuilding,
+  ]);
 
   const filterList = () => {
     return allResidents.filter((p) => {
-      const fullName = p.lastName
-        ? `${p.firstName} ${p.lastName}`
-        : p.firstName;
-
+      const fullName = p.lastName;
       return fullName.toLowerCase().includes(searchTerm.toLowerCase());
     });
   };
@@ -120,10 +122,12 @@ const HomePage = ({ navigation }) => {
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
             refreshControl={
-              <RefreshControlComponent
-                loading={loadingPackage}
-                onRefreshControl={() =>
-                  allBuildings ? dispatch(getPackages(allBuildings.id)) : null
+              <RefreshControl
+                refreshing={loadingPackage}
+                onRefresh={() =>
+                  allBuildings
+                    ? dispatch(getPackagesNoHandedOver(allBuildings.id))
+                    : null
                 }
               />
             }
@@ -135,7 +139,7 @@ const HomePage = ({ navigation }) => {
             <BlockDeliverPackageComponent
               navigation={navigation}
               loading={loadingPackage}
-              nbPackage={allPackages ? allPackages.length : 0}
+              nbPackage={nbHandedOverPackages}
             />
             <View style={{ marginTop: 20 }}>
               <Text style={styles.textTitle}>
