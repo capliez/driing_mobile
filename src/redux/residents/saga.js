@@ -6,8 +6,12 @@ import {
   /* GET FIND */ GET_RESIDENT_CURRENT,
   /* POST */ REGISTER_RESIDENT,
   /* UPDATE */ UPDATE_RESIDENT,
+  /* SEARCH */ SEARCH_RESIDENT,
 } from '../action-types';
 import {
+  /* SEARCH */
+  searchResidentError,
+  searchResidentSuccess,
   /* GET FIND */
   getResidentCurrrentSuccess,
   getResidentCurrrentError,
@@ -23,6 +27,31 @@ import {
 } from './actions';
 
 const MSG_ERROR = 'Residents : An error has occurred';
+
+/* SEARCH */
+export function* watchSearchResident() {
+  yield takeEvery(SEARCH_RESIDENT, searchResidentSaga);
+}
+
+const searchResidentAsync = async ({ idBuilding, lastName, isHandedOver }) =>
+  await Axios.get(
+    `${RESIDENTS_API}/search/${idBuilding}/${lastName}/${isHandedOver}`,
+  )
+    .then((result) => result)
+    .catch((error) => error);
+
+function* searchResidentSaga({ payload }) {
+  try {
+    const result = yield call(searchResidentAsync, payload);
+    if (result.status === 200) {
+      yield put(searchResidentSuccess(result.data['hydra:member']));
+    } else {
+      yield put(searchResidentError(MSG_ERROR));
+    }
+  } catch (error) {
+    yield put(searchResidentError(MSG_ERROR));
+  }
+}
 
 /* GET ALL */
 export function* watchGetResidents() {
@@ -125,5 +154,6 @@ export default function* rootSaga() {
     fork(watchGetResidentCurrent),
     fork(watchRegisterResident),
     fork(watchUpdateResident),
+    fork(watchSearchResident),
   ]);
 }

@@ -8,13 +8,21 @@ import {
   Text,
   View,
   RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import MenuBotom from '../../components/menuBottom';
-import { PACKAGES } from '../../constants/packages';
-import { isNotEmpty, marginHorizontal, marginTop } from '../../utils';
+import {
+  isNotEmpty,
+  isNotEmptyArray,
+  marginHorizontal,
+  marginTop,
+} from '../../utils';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPackagesNoHandedOver } from '../../redux/packages/actions';
-import { getResidents } from '../../redux/residents/actions';
+import {
+  searchResident,
+  searchResidentEmpty,
+} from '../../redux/residents/actions';
 
 const InputSearchComponent = lazy(
   () => import('../../components/_shared/inputSearch'),
@@ -46,7 +54,8 @@ const HomePage = ({ navigation }) => {
   const { all: allBuildings, loading: loadingBuilding } = useSelector(
     (state) => state.buildings,
   );
-  const { all: allResidents } = useSelector((state) => state.residents);
+  const { allSearch: allResidentSearch, loading: loadingResident } =
+    useSelector((state) => state.residents);
 
   const { currentUser } = useSelector((state) => state.authUser);
 
@@ -56,25 +65,11 @@ const HomePage = ({ navigation }) => {
     if (!loadingBuilding && isNotEmpty(allBuildings)) {
       !isNotEmpty(nbHandedOverPackages) &&
         dispatch(getPackagesNoHandedOver(allBuildings.id));
-      !isNotEmpty(allResidents) && dispatch(getResidents(allBuildings.id));
     }
-  }, [
-    allBuildings,
-    nbHandedOverPackages,
-    allResidents,
-    dispatch,
-    loadingBuilding,
-  ]);
-
-  const filterList = () => {
-    return allResidents.filter((p) => {
-      const fullName = p.lastName;
-      return fullName.toLowerCase().includes(searchTerm.toLowerCase());
-    });
-  };
+  }, [allBuildings, nbHandedOverPackages, dispatch, loadingBuilding]);
 
   const renderGridList = () =>
-    filterList().map((p) => (
+    allResidentSearch.map((p) => (
       <ItemResidentLazyComponent navigation={navigation} key={p.id} item={p} />
     ));
 
@@ -101,12 +96,18 @@ const HomePage = ({ navigation }) => {
             }}
           />
         </View>
-        <InputSearchComponent value={searchTerm} onChangeText={onChangeText} />
-        {searchTerm ? (
+        <InputSearchComponent
+          isHandedOver={false}
+          allBuildings={allBuildings}
+          value={searchTerm}
+          onChangeText={onChangeText}
+        />
+        {searchTerm && searchTerm.length > 1 ? (
           <View style={styles.divList}>
-            {PACKAGES ? (
-              renderGridList()
-            ) : (
+            {!loadingResident &&
+              isNotEmptyArray(allResidentSearch) &&
+              renderGridList()}
+            {!loadingResident && !isNotEmptyArray(allResidentSearch) && (
               <Text
                 accessible
                 accessibilityRole="text"
@@ -114,6 +115,14 @@ const HomePage = ({ navigation }) => {
               >
                 {t('textNoPackagesPending')}
               </Text>
+            )}
+
+            {loadingResident && (
+              <ActivityIndicator
+                style={{ marginTop }}
+                size="large"
+                color="#000000"
+              />
             )}
           </View>
         ) : (

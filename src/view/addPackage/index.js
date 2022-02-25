@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import HeaderComponent from '../../components/_shared/headerPage';
-import RefreshControlComponent from '../../components/_shared/refreshControl';
 import { HomeRoot } from '../../constants/routes';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 import AutoComplete from '../../components/_shared/autoComplete';
@@ -49,7 +48,6 @@ const AddPackagePage = ({ navigation }) => {
         keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        refreshControl={<RefreshControlComponent />}
       >
         <HeaderComponent route={HomeRoot} navigation={navigation} />
         <View style={styles.divNamePackage}>
@@ -116,9 +114,9 @@ const AddPackagePage = ({ navigation }) => {
                     style={[
                       styles.divItemPackage,
                       nbPackageActive &&
-                        nbPackageActive === item.value && {
-                          backgroundColor: '#131314',
-                        },
+                      nbPackageActive === item.value && {
+                        backgroundColor: '#131314',
+                      },
                     ]}
                     key={item.id}
                   >
@@ -126,9 +124,9 @@ const AddPackagePage = ({ navigation }) => {
                       style={[
                         styles.textItemPackage,
                         nbPackageActive &&
-                          nbPackageActive === item.value && {
-                            color: '#FFFFFF',
-                          },
+                        nbPackageActive === item.value && {
+                          color: '#FFFFFF',
+                        },
                       ]}
                     >
                       {item.value}

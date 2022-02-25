@@ -7,6 +7,11 @@ import {
   GET_RESIDENT_CURRENT,
   GET_RESIDENT_CURRENT_ERROR,
   GET_RESIDENT_CURRENT_SUCCESS,
+  /* SEARCH */
+  SEARCH_RESIDENT,
+  SEARCH_RESIDENT_ERROR,
+  SEARCH_RESIDENT_SUCCESS,
+  SEARCH_RESIDENT_EMPTY,
   /* POST */
   REGISTER_RESIDENT,
   REGISTER_RESIDENT_ERROR,
@@ -20,14 +25,31 @@ import {
   EMPTY_SUCCESS_RESIDENT,
 } from '../action-types';
 
+/* SEARCH */
+export const searchResident = (idBuilding, lastName, isHandedOver) => ({
+  type: SEARCH_RESIDENT,
+  payload: { idBuilding, lastName, isHandedOver },
+});
+export const searchResidentSuccess = (residents) => ({
+  type: SEARCH_RESIDENT_SUCCESS,
+  payload: residents,
+});
+export const searchResidentError = (message) => ({
+  type: SEARCH_RESIDENT_ERROR,
+  payload: message,
+});
+export const searchResidentEmpty = () => ({
+  type: SEARCH_RESIDENT_EMPTY,
+});
+
 /* GET ALL */
 export const getResidents = (idBuilding) => ({
   type: GET_RESIDENTS,
   payload: idBuilding,
 });
-export const getResidentsSuccess = (buildings) => ({
+export const getResidentsSuccess = (residents) => ({
   type: GET_RESIDENTS_SUCCESS,
-  payload: buildings,
+  payload: residents,
 });
 export const getResidentsError = (message) => ({
   type: GET_RESIDENTS_ERROR,
