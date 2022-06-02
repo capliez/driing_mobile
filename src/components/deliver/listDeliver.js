@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
-import React, { lazy } from 'react';
-import { Text, View, Platform, FlatList } from 'react-native';
-import { PACKAGES } from '../../constants/packages';
+import React, { lazy, useState } from 'react';
+import { Text, View, FlatList } from 'react-native';
 
 const NoPackageLazyComponent = lazy(
   () => import('../../components/deliver/noPackage'),
@@ -12,7 +11,7 @@ const InputSearchLazyComponent = lazy(() => import('../_shared/inputSearch'));
 const ItemDeliverLazyComponent = lazy(() => import('./item'));
 
 const ListDeliverComponent = ({ packages, t, navigation }) => {
-  const [searchTerm, onChangeText] = React.useState('');
+  const [searchTerm, onChangeText] = useState('');
 
   const filterList = () => {
     return packages.filter((p) => {
@@ -23,7 +22,6 @@ const ListDeliverComponent = ({ packages, t, navigation }) => {
       return fullName.toLowerCase().includes(searchTerm.toLowerCase());
     });
   };
-
   return (
     <>
       <InputSearchLazyComponent
@@ -31,7 +29,7 @@ const ListDeliverComponent = ({ packages, t, navigation }) => {
         onChangeText={onChangeText}
       />
 
-      {PACKAGES ? (
+      {packages ? (
         <View style={{ marginVertical: 15, flex: 1 }}>
           {packages && packages.length > 0 ? (
             <FlatList
