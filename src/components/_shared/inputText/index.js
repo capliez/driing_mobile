@@ -12,6 +12,7 @@ const InputText = ({
   keyboardType = 'default',
   secureTextEntry = false,
   name,
+  textContentType,
 }) => {
   const { isDarkTheme } = useSelector((state) => state.settings);
 
@@ -27,6 +28,7 @@ const InputText = ({
           name ? onChangeText(name, text) : onChangeText(text)
         }
         value={value}
+        textContentType={textContentType}
         secureTextEntry={secureTextEntry}
         placeholder={placeholder}
         keyboardType={keyboardType}

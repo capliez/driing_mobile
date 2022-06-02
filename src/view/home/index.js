@@ -7,15 +7,22 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
+  RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import MenuBotom from '../../components/menuBottom';
-import { PACKAGES } from '../../constants/packages';
-import { isNotEmpty, marginHorizontal, marginTop } from '../../utils';
+import {
+  isNotEmpty,
+  isNotEmptyArray,
+  marginHorizontal,
+  marginTop,
+} from '../../utils';
 import { useSelector, useDispatch } from 'react-redux';
-import { getPackages } from '../../redux/packages/actions';
-import { getResidents } from '../../redux/residents/actions';
-import RefreshControlComponent from '../../components/_shared/refreshControl';
+import { getPackagesNoHandedOver } from '../../redux/packages/actions';
+import {
+  searchResident,
+  searchResidentEmpty,
+} from '../../redux/residents/actions';
 
 const InputSearchComponent = lazy(
   () => import('../../components/_shared/inputSearch'),
@@ -42,13 +49,13 @@ const ItemResidentLazyComponent = lazy(
 const HomePage = ({ navigation }) => {
   const [searchTerm, onChangeText] = React.useState('');
   const { t } = useTranslation(['deliver', 'translations']);
-  const { all: allPackages, loading: loadingPackage } = useSelector(
-    (state) => state.packages,
-  );
+  const { nbHandedOver: nbHandedOverPackages, loading: loadingPackage } =
+    useSelector((state) => state.packages);
   const { all: allBuildings, loading: loadingBuilding } = useSelector(
     (state) => state.buildings,
   );
-  const { all: allResidents } = useSelector((state) => state.residents);
+  const { allSearch: allResidentSearch, loading: loadingResident } =
+    useSelector((state) => state.residents);
 
   const { currentUser } = useSelector((state) => state.authUser);
 
@@ -56,23 +63,13 @@ const HomePage = ({ navigation }) => {
 
   useEffect(() => {
     if (!loadingBuilding && isNotEmpty(allBuildings)) {
-      dispatch(getPackages(allBuildings.id));
-      dispatch(getResidents(allBuildings.id));
+      !isNotEmpty(nbHandedOverPackages) &&
+        dispatch(getPackagesNoHandedOver(allBuildings.id));
     }
-  }, [allBuildings, dispatch, loadingBuilding]);
-
-  const filterList = () => {
-    return allResidents.filter((p) => {
-      const fullName = p.lastName
-        ? `${p.firstName} ${p.lastName}`
-        : p.firstName;
-
-      return fullName.toLowerCase().includes(searchTerm.toLowerCase());
-    });
-  };
+  }, [allBuildings, nbHandedOverPackages, dispatch, loadingBuilding]);
 
   const renderGridList = () =>
-    filterList().map((p) => (
+    allResidentSearch.map((p) => (
       <ItemResidentLazyComponent navigation={navigation} key={p.id} item={p} />
     ));
 
@@ -99,12 +96,18 @@ const HomePage = ({ navigation }) => {
             }}
           />
         </View>
-        <InputSearchComponent value={searchTerm} onChangeText={onChangeText} />
-        {searchTerm ? (
+        <InputSearchComponent
+          isHandedOver={false}
+          allBuildings={allBuildings}
+          value={searchTerm}
+          onChangeText={onChangeText}
+        />
+        {searchTerm && searchTerm.length > 1 ? (
           <View style={styles.divList}>
-            {PACKAGES ? (
-              renderGridList()
-            ) : (
+            {!loadingResident &&
+              isNotEmptyArray(allResidentSearch) &&
+              renderGridList()}
+            {!loadingResident && !isNotEmptyArray(allResidentSearch) && (
               <Text
                 accessible
                 accessibilityRole="text"
@@ -113,6 +116,14 @@ const HomePage = ({ navigation }) => {
                 {t('textNoPackagesPending')}
               </Text>
             )}
+
+            {loadingResident && (
+              <ActivityIndicator
+                style={{ marginTop }}
+                size="large"
+                color="#000000"
+              />
+            )}
           </View>
         ) : (
           <ScrollView
@@ -120,10 +131,12 @@ const HomePage = ({ navigation }) => {
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
             refreshControl={
-              <RefreshControlComponent
-                loading={loadingPackage}
-                onRefreshControl={() =>
-                  allBuildings ? dispatch(getPackages(allBuildings.id)) : null
+              <RefreshControl
+                refreshing={loadingPackage}
+                onRefresh={() =>
+                  allBuildings
+                    ? dispatch(getPackagesNoHandedOver(allBuildings.id))
+                    : null
                 }
               />
             }
@@ -135,7 +148,7 @@ const HomePage = ({ navigation }) => {
             <BlockDeliverPackageComponent
               navigation={navigation}
               loading={loadingPackage}
-              nbPackage={allPackages ? allPackages.length : 0}
+              nbPackage={nbHandedOverPackages}
             />
             <View style={{ marginTop: 20 }}>
               <Text style={styles.textTitle}>

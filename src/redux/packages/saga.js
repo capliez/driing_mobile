@@ -5,6 +5,7 @@ import {
   /* GET ALL */ GET_PACKAGES,
   /* GET FIND */ GET_PACKAGE_CURRENT,
   /* POST */ REGISTER_PACKAGE,
+  /* GET NB PACKAGES NO HANDED OVER */ GET_PACKAGES_COUNT_NO_HANDEDOVER,
 } from '../action-types';
 import {
   /* GET FIND */
@@ -16,9 +17,39 @@ import {
   /* POST */
   registerPackageSuccess,
   registerPackageError,
+  /* GET NB PACKAGES NO HANDED OVER */
+  getPackagesNoHandedOverError,
+  getPackagesNoHandedOverSuccess,
 } from './actions';
 
 const MSG_ERROR = 'Packages : An error has occurred';
+
+/* GET NB PACKAGES NO HANDED OVER */
+export function* watchGetCountPackagesNoHandedOver() {
+  yield takeEvery(GET_PACKAGES_COUNT_NO_HANDEDOVER, getCountPackagesHandedOver);
+}
+
+const getCountPackagesHandedOverAsync = async (idBuilding) =>
+  await Axios.get(`${PACKAGES_API}/count/handedover/${idBuilding}`)
+    .then((result) => result)
+    .catch((error) => error);
+
+function* getCountPackagesHandedOver({ payload }) {
+  try {
+    const result = yield call(getCountPackagesHandedOverAsync, payload);
+    if (result?.status === 200) {
+      yield put(
+        getPackagesNoHandedOverSuccess(
+          parseInt(result.data['hydra:member'][0]),
+        ),
+      );
+    } else {
+      yield put(getPackagesNoHandedOverError(MSG_ERROR));
+    }
+  } catch (error) {
+    yield put(getPackagesNoHandedOverError(MSG_ERROR));
+  }
+}
 
 /* GET ALL */
 export function* watchGetPackages() {
@@ -93,5 +124,6 @@ export default function* rootSaga() {
     fork(watchGetPackages),
     fork(watchGetPackageCurrent),
     fork(watchRegisterPackage),
+    fork(watchGetCountPackagesNoHandedOver),
   ]);
 }

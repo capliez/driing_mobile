@@ -6,15 +6,26 @@ import { SvgXml } from 'react-native-svg';
 import UserAvatar from 'react-native-user-avatar';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 import OnePackageImg from '../../images/packages/onePackage';
-
-const ItemOneRow = ({ item, navigation, onClick }) => {
+import moment from 'moment';
+import 'moment/locale/fr';
+const ItemOneRow = ({ packages, date, navigation, onClick }) => {
   const { t } = useTranslation('deliver');
+
+  const nbPackages = () => {
+    let count = 0;
+
+    packages.map((p) => (count += p.nbPackage));
+
+    return count;
+  };
 
   return (
     <View accessible accessibilityRole="tab" style={styles.divMain}>
       <View style={styles.divFirst}>
         <View>
-          <Text style={styles.titleDate}>Lundi 27 Novembre</Text>
+          <Text style={styles.titleDate}>
+            {moment(date).local('fr').format('LL')}
+          </Text>
         </View>
         <View>
           <IconIonicons
@@ -26,7 +37,7 @@ const ItemOneRow = ({ item, navigation, onClick }) => {
       </View>
       <View style={styles.divLast}>
         <View style={styles.divLastOne}>
-          <Text style={{ marginRight: 10 }}>2 colis</Text>
+          <Text style={{ marginRight: 10 }}>{nbPackages()} colis</Text>
           <SvgXml
             title={'Nombre de colis'}
             xml={OnePackageImg}
@@ -35,14 +46,9 @@ const ItemOneRow = ({ item, navigation, onClick }) => {
           />
         </View>
         <View style={styles.divUsers}>
-          <UserAvatar size={24} name="Avishay Bar" />
-          <UserAvatar size={24} name="Bob Dylem" />
-          <UserAvatar
-            style={{ marginLeft: 5 }}
-            size={24}
-            name="+1"
-            bgColor={'#B0B6BB'}
-          />
+          {packages.map((r) => (
+            <UserAvatar key={r.id} size={24} name={r.resident.lastName} />
+          ))}
         </View>
       </View>
     </View>
@@ -83,7 +89,7 @@ const styles = StyleSheet.create({
 });
 
 ItemOneRow.propTypes = {
-  item: PropTypes.object,
+  packages: PropTypes.array,
   navigation: PropTypes.object,
   onClick: PropTypes.func,
 };

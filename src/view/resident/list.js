@@ -27,10 +27,14 @@ const ListResident = ({ navigation }) => {
   );
 
   useEffect(() => {
-    if (!loadingBuilding && isNotEmpty(allBuildings)) {
+    if (
+      !loadingBuilding &&
+      isNotEmpty(allBuildings) &&
+      !isNotEmpty(allResidents)
+    ) {
       dispatch(getResidents(allBuildings.id));
     }
-  }, [allBuildings, dispatch, loadingBuilding]);
+  }, [allBuildings, dispatch, loadingBuilding, allResidents]);
 
   return (
     <LayoutDefault navigation={navigation}>

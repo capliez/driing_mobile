@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
 });
 
 ButtonComponent.propTypes = {
-  classBtn: PropTypes.string,
+  classBtn: PropTypes.string || PropTypes.object,
   classText: PropTypes.string,
   iconName: PropTypes.string,
   text: PropTypes.string,

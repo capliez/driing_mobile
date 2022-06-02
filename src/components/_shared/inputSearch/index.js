@@ -3,9 +3,28 @@ import React from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { isNotEmpty } from '../../../utils';
+import {
+  searchResident,
+  searchResidentEmpty,
+} from '../../../redux/residents/actions';
 
-const InputSearch = ({ onChangeText, value }) => {
+const InputSearch = ({ onChangeText, value, allBuildings, isHandedOver }) => {
   const { t } = useTranslation('deliver');
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    isNotEmpty(value) &&
+      value.length > 1 &&
+      isNotEmpty(allBuildings) &&
+      dispatch(searchResident(allBuildings.id, value, isHandedOver ? 1 : 0));
+
+    return () => {
+      dispatch(searchResidentEmpty);
+    };
+  }, [allBuildings, dispatch, isHandedOver, value]);
 
   return (
     <View style={styles.divSearch}>
@@ -17,6 +36,10 @@ const InputSearch = ({ onChangeText, value }) => {
         style={styles.inputSearch}
         onChangeText={onChangeText}
         value={value}
+        returnKeyType="search"
+        returnKeyLabel="Valider"
+        autoComplete="name-family"
+        autoCapitalize="words"
         placeholder={t('inputSearch')}
         keyboardType="default"
         clearButtonMode="always"
@@ -46,6 +69,8 @@ const styles = StyleSheet.create({
 InputSearch.propTypes = {
   onChangeText: PropTypes.func,
   value: PropTypes.string,
+  allBuildings: PropTypes.object,
+  isHandedOver: PropTypes.bool,
 };
 
 export default InputSearch;

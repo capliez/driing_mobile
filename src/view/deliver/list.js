@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types';
-import React, { lazy } from 'react';
+import React, { lazy, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PACKAGES } from '../../constants/packages';
+import { useDispatch, useSelector } from 'react-redux';
 import { HomeRoot } from '../../constants/routes';
 import LayoutDefault from '../../layout';
+import { getPackages } from '../../redux/packages/actions';
+import { isNotEmpty } from '../../utils';
 
 const HeaderLazyComponent = lazy(
   () => import('../../components/_shared/headerPage'),
@@ -15,6 +17,17 @@ const ListDeliverLazyComponent = lazy(
 
 const DeliverPage = ({ navigation }) => {
   const { t } = useTranslation('deliver');
+  const { all: allPackages } = useSelector((state) => state.packages);
+  const { all: allBuildings, loading: loadingBuilding } = useSelector(
+    (state) => state.buildings,
+  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!loadingBuilding && isNotEmpty(allBuildings)) {
+      !isNotEmpty(allPackages) && dispatch(getPackages(allBuildings.id));
+    }
+  }, [allBuildings, dispatch, loadingBuilding, allPackages]);
 
   return (
     <LayoutDefault navigation={navigation}>
@@ -26,7 +39,7 @@ const DeliverPage = ({ navigation }) => {
 
       <ListDeliverLazyComponent
         t={t}
-        packages={PACKAGES}
+        dates={allPackages}
         navigation={navigation}
       />
     </LayoutDefault>

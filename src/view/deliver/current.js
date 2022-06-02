@@ -14,7 +14,6 @@ import {
 import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import HeaderComponent from '../../components/_shared/headerPage';
 import AddDeliverWithCode from '../../components/_shared/inputCode';
-import RefreshControlComponent from '../../components/_shared/refreshControl';
 import { DeliverListRoot } from '../../constants/routes';
 
 const item = {
@@ -49,7 +48,6 @@ const CurrentDeliver = ({ navigation }) => {
         scrollEventThrottle={300}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        refreshControl={<RefreshControlComponent />}
       >
         <HeaderComponent
           title={t('textWaitPackage')}

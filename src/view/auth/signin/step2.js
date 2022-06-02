@@ -48,6 +48,7 @@ const Step2SignIn = ({ navigation, changeStep, steps }) => {
           <Text style={styles.text1}>Entrez vos identifiant</Text>
           <InputText
             name="phone"
+            textContentType="username"
             onChangeText={onChangeText}
             value={fields.phone}
             maxLength={10}
@@ -55,6 +56,7 @@ const Step2SignIn = ({ navigation, changeStep, steps }) => {
             label={'N° de téléphone'}
           />
           <InputText
+            textContentType="password"
             name="password"
             onChangeText={onChangeText}
             value={fields.password}

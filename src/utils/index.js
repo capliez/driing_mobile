@@ -7,3 +7,4 @@ export const defaultLocale = 'fr';
 export const nameTokenAuth = 'driing_auth';
 
 export const isNotEmpty = (data) => data !== null && data !== '';
+export const isNotEmptyArray = (data) => data !== null && data.length > 0;

@@ -13,7 +13,7 @@ const AppControlFlow = () => {
   return (
     <RootSiblingParent>
       <Provider store={configureStore()}>
-        <Suspense fallback={<Text>Je charge</Text>}>
+        <Suspense fallback={<></>}>
           <NavigationContainer>
             <AppNavigator />
           </NavigationContainer>

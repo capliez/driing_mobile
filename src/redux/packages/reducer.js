@@ -14,6 +14,10 @@ import {
   /* NOTIFICATION */
   EMPTY_ERROR_PACKAGE,
   EMPTY_SUCCESS_PACKAGE,
+  /* GET NB PACKAGES NO HANDED OVER */
+  GET_PACKAGES_COUNT_NO_HANDEDOVER,
+  GET_PACKAGES_COUNT_NO_HANDEDOVER_SUCCESS,
+  GET_PACKAGES_COUNT_NO_HANDEDOVER_ERROR,
 } from '../action-types';
 
 const INIT_STATE = {
@@ -22,10 +26,23 @@ const INIT_STATE = {
   error: null,
   current: null,
   success: false,
+  nbHandedOver: null,
 };
 
 export const PackageReducer = (state = INIT_STATE, action) => {
   switch (action.type) {
+    /* GET NB PACKAGES NO HANDED OVER */
+    case GET_PACKAGES_COUNT_NO_HANDEDOVER:
+      return { ...state, loading: true };
+    case GET_PACKAGES_COUNT_NO_HANDEDOVER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        nbHandedOver: action.payload,
+        error: null,
+      };
+    case GET_PACKAGES_COUNT_NO_HANDEDOVER_ERROR:
+      return { ...state, error: action.payload, loading: false };
     /* GET ALL */
     case GET_PACKAGES:
       return { ...state, loading: true };

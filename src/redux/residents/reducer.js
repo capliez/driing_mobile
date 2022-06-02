@@ -11,6 +11,11 @@ import {
   REGISTER_RESIDENT,
   REGISTER_RESIDENT_ERROR,
   REGISTER_RESIDENT_SUCCESS,
+  /* SEARCH */
+  SEARCH_RESIDENT,
+  SEARCH_RESIDENT_ERROR,
+  SEARCH_RESIDENT_SUCCESS,
+  SEARCH_RESIDENT_EMPTY,
   /* UPDATE */
   UPDATE_RESIDENT,
   UPDATE_RESIDENT_ERROR,
@@ -22,6 +27,7 @@ import {
 
 const INIT_STATE = {
   all: null,
+  allSearch: null,
   loading: false,
   error: null,
   current: null,
@@ -30,6 +36,23 @@ const INIT_STATE = {
 
 export const ResidentReducer = (state = INIT_STATE, action) => {
   switch (action.type) {
+    /* SEARCH */
+    case SEARCH_RESIDENT:
+      return { ...state, loading: true };
+    case SEARCH_RESIDENT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        allSearch: action.payload,
+        error: null,
+      };
+    case SEARCH_RESIDENT_ERROR:
+      return { ...state, error: action.payload, loading: false };
+    case SEARCH_RESIDENT_EMPTY:
+      return {
+        ...state,
+        allSearch: null,
+      };
     /* GET ALL */
     case GET_RESIDENTS:
       return { ...state, loading: true };
