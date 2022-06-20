@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Dimensions,
@@ -17,11 +17,14 @@ import HeaderComponent from '../../components/_shared/headerPage';
 import { HomeRoot } from '../../constants/routes';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 import AutoComplete from '../../components/_shared/autoComplete';
-import { PACKAGES } from '../../constants/packages';
 import ItemDeliver from '../../components/deliver/item';
 import IconMaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconResult from '../../components/_shared/iconResult';
 import ButtonComponent from '../../components/_shared/button';
+import { useSelector, useDispatch } from 'react-redux';
+import { isNotEmpty } from '../../utils';
+import { getResidents } from '../../redux/residents/actions';
+
 const { width: viewportWidth } = Dimensions.get('window');
 
 function wp(percentage) {
@@ -38,8 +41,24 @@ const AddPackagePage = ({ navigation }) => {
   const { t } = useTranslation('deliver');
   const [nbPackageActive, setNbPackageActive] = useState(null);
   const [housingCurrent, setHousingCurrent] = useState(null);
-
+  const dispatch = useDispatch();
   const carouselref = useRef(null);
+  const { all: allBuildings, loading: loadingBuilding } = useSelector(
+    (state) => state.buildings,
+  );
+  const { all: allResidents, loading: loadingResidents } = useSelector(
+    (state) => state.residents,
+  );
+
+  useEffect(() => {
+    if (
+      !loadingBuilding &&
+      isNotEmpty(allBuildings) &&
+      !isNotEmpty(allResidents)
+    ) {
+      dispatch(getResidents(allBuildings.id));
+    }
+  }, [allBuildings, dispatch, loadingBuilding, allResidents]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
@@ -81,7 +100,7 @@ const AddPackagePage = ({ navigation }) => {
           {housingCurrent ? (
             <ItemDeliver item={housingCurrent} />
           ) : (
-            <AutoComplete setValue={setHousingCurrent} options={PACKAGES} />
+            <AutoComplete setValue={setHousingCurrent} options={allResidents} />
           )}
         </View>
 
@@ -114,9 +133,9 @@ const AddPackagePage = ({ navigation }) => {
                     style={[
                       styles.divItemPackage,
                       nbPackageActive &&
-                      nbPackageActive === item.value && {
-                        backgroundColor: '#131314',
-                      },
+                        nbPackageActive === item.value && {
+                          backgroundColor: '#131314',
+                        },
                     ]}
                     key={item.id}
                   >
@@ -124,9 +143,9 @@ const AddPackagePage = ({ navigation }) => {
                       style={[
                         styles.textItemPackage,
                         nbPackageActive &&
-                        nbPackageActive === item.value && {
-                          color: '#FFFFFF',
-                        },
+                          nbPackageActive === item.value && {
+                            color: '#FFFFFF',
+                          },
                       ]}
                     >
                       {item.value}

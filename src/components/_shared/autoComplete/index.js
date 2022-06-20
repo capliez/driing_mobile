@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import ItemDeliver from '../../deliver/item';
+import ItemResident from '../../resident/item';
 
 const Autocomplete = ({ options, setValue }) => {
   const [activeOption, setActiveOption] = useState(0);
@@ -56,7 +57,7 @@ const Autocomplete = ({ options, setValue }) => {
           <View style={{ marginTop: 10 }}>
             {filteredOptions.map((item, index) => {
               return (
-                <ItemDeliver onClick={onClick} key={item.id} item={item} />
+                <ItemResident ronClick={onClick} key={item.id} item={item} />
               );
             })}
           </View>
