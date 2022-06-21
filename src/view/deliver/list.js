@@ -17,7 +17,9 @@ const ListDeliverLazyComponent = lazy(
 
 const DeliverPage = ({ navigation }) => {
   const { t } = useTranslation('deliver');
-  const { all: allPackages } = useSelector((state) => state.packages);
+  const { all: allPackages, loading: loadingPackages } = useSelector(
+    (state) => state.packages,
+  );
   const { all: allBuildings, loading: loadingBuilding } = useSelector(
     (state) => state.buildings,
   );
@@ -39,7 +41,9 @@ const DeliverPage = ({ navigation }) => {
 
       <ListDeliverLazyComponent
         t={t}
-        dates={allPackages}
+        loadingPackages={loadingPackages}
+        items={allPackages}
+        idBuilding={allBuildings.id}
         navigation={navigation}
       />
     </LayoutDefault>

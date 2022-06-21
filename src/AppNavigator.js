@@ -8,6 +8,8 @@ import {
   AddPackageRoot,
   ResidentListRoot,
   SignInRoot,
+  DeliverListPackageRoot,
+  ProfilRoot,
 } from './constants/routes';
 import { useSelector } from 'react-redux';
 import ToastGeneral from './toastGeneral';
@@ -22,6 +24,10 @@ const CurrentDeliverScreen = lazy(() => import('./view/deliver/current'));
 const AddPackageScreen = lazy(() => import('./view/addPackage'));
 const ListResidentScreen = lazy(() => import('./view/resident/list'));
 const SignInScreen = lazy(() => import('./view/auth/signin'));
+const ListDeliverPackageScreen = lazy(
+  () => import('./view/deliver/listPackage'),
+);
+const ProfilScreen = lazy(() => import('./view/profil'));
 
 export default () => {
   const {
@@ -78,6 +84,20 @@ export default () => {
           <Stack.Screen
             name={ResidentListRoot}
             component={ListResidentScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name={DeliverListPackageRoot}
+            component={ListDeliverPackageScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name={ProfilRoot}
+            component={ProfilScreen}
             options={{
               headerShown: false,
             }}

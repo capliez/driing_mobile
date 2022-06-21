@@ -11,6 +11,10 @@ import {
   REGISTER_PACKAGE,
   REGISTER_PACKAGE_ERROR,
   REGISTER_PACKAGE_SUCCESS,
+  /* PUT */
+  UPDATE_PACKAGE,
+  UPDATE_PACKAGE_ERROR,
+  UPDATE_PACKAGE_SUCCESS,
   /* NOTIFICATION */
   EMPTY_ERROR_PACKAGE,
   EMPTY_SUCCESS_PACKAGE,
@@ -76,9 +80,20 @@ export const PackageReducer = (state = INIT_STATE, action) => {
         ...state,
         loading: false,
         success: true,
-        all: [action.payload].concat(state.all),
+        //all: [action.payload].concat(state.all),
       };
     case REGISTER_PACKAGE_ERROR:
+      return { ...state, loading: false, error: action.payload };
+    /* PUT */
+    case UPDATE_PACKAGE:
+      return { ...state, loading: true };
+    case UPDATE_PACKAGE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        success: true,
+      };
+    case UPDATE_PACKAGE_ERROR:
       return { ...state, loading: false, error: action.payload };
     /* NOTIFICATION */
     case EMPTY_SUCCESS_PACKAGE:

@@ -57,7 +57,7 @@ const Autocomplete = ({ options, setValue }) => {
           <View style={{ marginTop: 10 }}>
             {filteredOptions.map((item, index) => {
               return (
-                <ItemResident ronClick={onClick} key={item.id} item={item} />
+                <ItemResident onClick={onClick} key={item.id} item={item} />
               );
             })}
           </View>

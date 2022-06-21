@@ -1,26 +1,20 @@
 import PropTypes from 'prop-types';
 import React, { lazy, useState } from 'react';
 import { Text, View, FlatList } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { getPackages } from '../../redux/packages/actions';
 
-const NoPackageLazyComponent = lazy(
-  () => import('../../components/deliver/noPackage'),
-);
+const NoPackageLazyComponent = lazy(() => import('./noPackage'));
 
 const InputSearchLazyComponent = lazy(() => import('../_shared/inputSearch'));
 
-const ItemDeliverLazyComponent = lazy(() => import('./item'));
+const ItemPackageLazyComponent = lazy(() => import('./itemPackage'));
 
-const ListDeliverComponent = ({
-  items,
+const ListDeliverPackageComponent = ({
+  packages,
   t,
-  loadingPackages,
-  idBuilding,
   navigation,
+  loadingPackages,
 }) => {
   const [searchTerm, onChangeText] = useState('');
-  const dispatch = useDispatch();
 
   return (
     <>
@@ -29,21 +23,18 @@ const ListDeliverComponent = ({
         onChangeText={onChangeText}
       />
 
-      {items ? (
+      {packages ? (
         <View style={{ marginVertical: 15, flex: 1 }}>
-          {items && items.length > 0 ? (
+          {packages && packages.length > 0 ? (
             <FlatList
-              showsVerticalScrollIndicator={false}
-              onRefresh={() => dispatch(getPackages(idBuilding))}
-              refreshing={loadingPackages}
               contentContainerStyle={{ paddingBottom: 90 }}
-              data={items}
-              keyExtractor={(k, item) => item}
-              renderItem={(k, item) => (
-                <ItemDeliverLazyComponent
-                  navigation={navigation}
-                  key={item}
-                  date={k.item}
+              data={packages}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={(item) => (
+                <ItemPackageLazyComponent
+                  loadingPackages={loadingPackages}
+                  key={item.index}
+                  item={item.item}
                 />
               )}
             />
@@ -64,10 +55,10 @@ const ListDeliverComponent = ({
   );
 };
 
-ListDeliverComponent.propTypes = {
+ListDeliverPackageComponent.propTypes = {
   packages: PropTypes.array,
   t: PropTypes.any,
   navigation: PropTypes.object,
 };
 
-export default ListDeliverComponent;
+export default ListDeliverPackageComponent;

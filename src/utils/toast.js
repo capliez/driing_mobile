@@ -7,3 +7,11 @@ export const toastError = (msg) =>
     textColor: 'white',
     position: Toast.positions.BOTTOM,
   });
+
+export const toastSuccess = (msg) =>
+  Toast.show(msg, {
+    duration: Toast.durations.LONG,
+    backgroundColor: 'green',
+    textColor: 'white',
+    position: Toast.positions.BOTTOM,
+  });

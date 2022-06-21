@@ -11,6 +11,10 @@ import {
   REGISTER_PACKAGE,
   REGISTER_PACKAGE_ERROR,
   REGISTER_PACKAGE_SUCCESS,
+  /* PUT */
+  UPDATE_PACKAGE,
+  UPDATE_PACKAGE_ERROR,
+  UPDATE_PACKAGE_SUCCESS,
   /* NOTIFICATION */
   EMPTY_ERROR_PACKAGE,
   EMPTY_SUCCESS_PACKAGE,
@@ -63,16 +67,30 @@ export const getPackageCurrrentError = (message) => ({
 });
 
 /* POST */
-export const registerPackage = (location) => ({
+export const registerPackage = (items) => ({
   type: REGISTER_PACKAGE,
-  payload: location,
+  payload: items,
 });
-export const registerPackageSuccess = (location) => ({
+export const registerPackageSuccess = (items) => ({
   type: REGISTER_PACKAGE_SUCCESS,
-  payload: location,
+  payload: items,
 });
 export const registerPackageError = (message) => ({
   type: REGISTER_PACKAGE_ERROR,
+  payload: message,
+});
+
+/* PUT */
+export const updatePackage = (id) => ({
+  type: UPDATE_PACKAGE,
+  payload: id,
+});
+export const updatePackageSuccess = (items) => ({
+  type: UPDATE_PACKAGE_SUCCESS,
+  payload: items,
+});
+export const updatePackageError = (message) => ({
+  type: UPDATE_PACKAGE_ERROR,
   payload: message,
 });
 

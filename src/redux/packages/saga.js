@@ -5,6 +5,7 @@ import {
   /* GET ALL */ GET_PACKAGES,
   /* GET FIND */ GET_PACKAGE_CURRENT,
   /* POST */ REGISTER_PACKAGE,
+  /* PUT */ UPDATE_PACKAGE,
   /* GET NB PACKAGES NO HANDED OVER */ GET_PACKAGES_COUNT_NO_HANDEDOVER,
 } from '../action-types';
 import {
@@ -17,6 +18,9 @@ import {
   /* POST */
   registerPackageSuccess,
   registerPackageError,
+  /* PUT */
+  updatePackageSuccess,
+  updatePackageError,
   /* GET NB PACKAGES NO HANDED OVER */
   getPackagesNoHandedOverError,
   getPackagesNoHandedOverSuccess,
@@ -98,9 +102,9 @@ const registerPackageAsync = async (item) => {
   return await Axios.post(PACKAGES_API, {
     isBulky,
     nbPackage,
-    resident: `/api/residents/${resident}`,
-    building: `/api/buildings/${building}`,
-    guardian: `/api/users/${guardian}`,
+    resident: `/api/residents/${resident.id}`,
+    building: `/api/buildings/${building.id}`,
+    guardian: `/api/users/${guardian.id}`,
   })
     .then((result) => result)
     .catch((error) => error.response);
@@ -112,10 +116,37 @@ function* registerPackage({ payload }) {
     if (result.status === 201) {
       yield put(registerPackageSuccess(result.data));
     } else {
-      yield put(registerPackageError('An error has occurred'));
+      yield put(registerPackageError(MSG_ERROR));
     }
   } catch (error) {
-    yield put(registerPackageError('An error has occurred'));
+    yield put(registerPackageError(MSG_ERROR));
+  }
+}
+
+/* PUT */
+export function* watchUpdatePackage() {
+  yield takeEvery(UPDATE_PACKAGE, updatePackage);
+}
+
+const updatePackageAsync = async (id) => {
+  return await Axios.put(`${PACKAGES_API}/${id}`, {
+    isBulky: true,
+  })
+    .then((result) => result)
+    .catch((error) => error.response);
+};
+
+function* updatePackage({ payload }) {
+  try {
+    const result = yield call(updatePackageAsync, payload);
+
+    if (result.status === 200) {
+      yield put(updatePackageSuccess(result.data));
+    } else {
+      yield put(updatePackageError(MSG_ERROR));
+    }
+  } catch (error) {
+    yield put(updatePackageError(MSG_ERROR));
   }
 }
 
@@ -125,5 +156,6 @@ export default function* rootSaga() {
     fork(watchGetPackageCurrent),
     fork(watchRegisterPackage),
     fork(watchGetCountPackagesNoHandedOver),
+    fork(watchUpdatePackage),
   ]);
 }

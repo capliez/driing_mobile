@@ -12,18 +12,26 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import Carousel from 'react-native-snap-carousel';
 import HeaderComponent from '../../components/_shared/headerPage';
 import { HomeRoot } from '../../constants/routes';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 import AutoComplete from '../../components/_shared/autoComplete';
-import ItemDeliver from '../../components/deliver/item';
+import ItemResident from '../../components/resident/item';
 import IconMaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconResult from '../../components/_shared/iconResult';
 import ButtonComponent from '../../components/_shared/button';
 import { useSelector, useDispatch } from 'react-redux';
 import { isNotEmpty } from '../../utils';
 import { getResidents } from '../../redux/residents/actions';
+import Carousel from 'react-native-anchor-carousel';
+import { SvgXml } from 'react-native-svg';
+import PackageImg from '../../images/addpackage/package';
+import MetreImg from '../../images/addpackage/metre';
+import {
+  registerPackage,
+  getPackagesNoHandedOver,
+  getPackages,
+} from '../../redux/packages/actions';
 
 const { width: viewportWidth } = Dimensions.get('window');
 
@@ -33,22 +41,37 @@ function wp(percentage) {
 }
 
 const slideWidth = wp(18);
-const itemHorizontalMargin = wp(2);
-const sliderWidth = viewportWidth;
-const itemWidth = slideWidth + itemHorizontalMargin * 2;
+const itemWidth = slideWidth * 2;
 
 const AddPackagePage = ({ navigation }) => {
   const { t } = useTranslation('deliver');
   const [nbPackageActive, setNbPackageActive] = useState(null);
-  const [housingCurrent, setHousingCurrent] = useState(null);
-  const dispatch = useDispatch();
+  const [residentCurrent, setResidentCurrent] = useState(null);
+  const [isPicture] = useState(false);
+  const [isBulky, setIsBulky] = useState(false);
   const carouselref = useRef(null);
+
+  const dispatch = useDispatch();
   const { all: allBuildings, loading: loadingBuilding } = useSelector(
     (state) => state.buildings,
   );
   const { all: allResidents, loading: loadingResidents } = useSelector(
     (state) => state.residents,
   );
+  const { loading: loadingPackages, success: successPackages } = useSelector(
+    (state) => state.packages,
+  );
+  const { currentUser } = useSelector((state) => state.authUser);
+
+  useEffect(() => {
+    if (successPackages) {
+      if (!loadingBuilding && isNotEmpty(allBuildings)) {
+        dispatch(getPackagesNoHandedOver(allBuildings.id));
+        dispatch(getPackages(allBuildings.id));
+      }
+      navigation.navigate(HomeRoot);
+    }
+  }, [allBuildings, dispatch, loadingBuilding, navigation, successPackages]);
 
   useEffect(() => {
     if (
@@ -59,6 +82,18 @@ const AddPackagePage = ({ navigation }) => {
       dispatch(getResidents(allBuildings.id));
     }
   }, [allBuildings, dispatch, loadingBuilding, allResidents]);
+
+  const submitPackage = () => {
+    dispatch(
+      registerPackage({
+        isBulky,
+        resident: residentCurrent,
+        nbPackage: nbPackageActive,
+        building: allBuildings,
+        guardian: currentUser,
+      }),
+    );
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
@@ -80,11 +115,12 @@ const AddPackagePage = ({ navigation }) => {
               }}
             >
               <Text style={styles.textLabel}>Indiquez le nom sur le colis</Text>
-              {housingCurrent && <IconResult />}
+              {residentCurrent && <IconResult />}
             </View>
-            {housingCurrent && (
+            {residentCurrent && (
               <Pressable
-                onPress={() => setHousingCurrent(null)}
+                disabled={loadingPackages}
+                onPress={() => setResidentCurrent(null)}
                 style={{ flexDirection: 'row', alignItems: 'center' }}
               >
                 <Text>Modifier</Text>
@@ -97,14 +133,17 @@ const AddPackagePage = ({ navigation }) => {
             )}
           </View>
 
-          {housingCurrent ? (
-            <ItemDeliver item={housingCurrent} />
+          {residentCurrent ? (
+            <ItemResident item={residentCurrent} />
           ) : (
-            <AutoComplete setValue={setHousingCurrent} options={allResidents} />
+            <AutoComplete
+              setValue={setResidentCurrent}
+              options={allResidents}
+            />
           )}
         </View>
 
-        {housingCurrent && (
+        {residentCurrent && (
           <View style={styles.divNbPackage}>
             <View
               style={{
@@ -129,6 +168,7 @@ const AddPackagePage = ({ navigation }) => {
                 ]}
                 renderItem={({ item }) => (
                   <Pressable
+                    disabled={loadingPackages}
                     onPress={() => setNbPackageActive(item.value)}
                     style={[
                       styles.divItemPackage,
@@ -152,23 +192,90 @@ const AddPackagePage = ({ navigation }) => {
                     </Text>
                   </Pressable>
                 )}
-                sliderWidth={sliderWidth}
                 itemWidth={itemWidth}
-                inactiveSlideScale={0.95}
-                loop={false}
-                inactiveSlideOpacity={1}
-                enableMomentum={true}
-                activeSlideAlignment={'start'}
-                activeAnimationType={'spring'}
-                activeAnimationOptions={{
-                  friction: 4,
-                  tension: 40,
-                }}
+                separatorWidth={0}
+                containerWidth={viewportWidth * 0.8}
+                inActiveScale={0.95}
               />
             </View>
           </View>
         )}
-        {nbPackageActive && housingCurrent && (
+        {nbPackageActive && residentCurrent && (
+          <View style={{ marginHorizontal: 15, padding: 10 }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              <Text style={styles.textLabel}>Détails colis</Text>
+              {nbPackageActive && <IconResult />}
+            </View>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: 15,
+              }}
+            >
+              <View
+                style={[styles.divPackages, isBulky && styles.packageActive]}
+              >
+                <Pressable
+                  disabled={loadingPackages}
+                  onPress={() => setIsBulky(true)}
+                  style={styles.buttonPackage}
+                >
+                  <SvgXml
+                    title={'Colis volumineux'}
+                    xml={PackageImg}
+                    width={76}
+                    height={58}
+                  />
+                  <SvgXml
+                    title={'Colis volumineux'}
+                    xml={MetreImg}
+                    width={12}
+                    height={60}
+                  />
+                </Pressable>
+                <Text style={styles.textPackageVolum}>Colis volumineux</Text>
+              </View>
+              <View
+                style={[
+                  styles.divPackages,
+                  isBulky == false && styles.packageActive,
+                ]}
+              >
+                <Pressable
+                  disabled={loadingPackages}
+                  onPress={() => setIsBulky(false)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <SvgXml
+                    title={'Colis non volumineux'}
+                    xml={PackageImg}
+                    width={76}
+                    height={58}
+                  />
+                </Pressable>
+                <Text style={styles.textPackageVolum}>
+                  Colis non volumineux
+                </Text>
+              </View>
+            </View>
+            <ButtonComponent
+              isDisabled={loadingPackages}
+              onClick={() => submitPackage()}
+              text="Ajouter le colis"
+            />
+          </View>
+        )}
+        {nbPackageActive && isPicture && residentCurrent && (
           <View style={{ marginHorizontal: 15, padding: 10 }}>
             <View
               style={{
@@ -203,6 +310,28 @@ const AddPackagePage = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  packageActive: {
+    borderWidth: 1,
+    borderColor: '#4AE397',
+  },
+  buttonPackage: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  divPackages: {
+    display: 'flex',
+    borderRadius: 15,
+    padding: 20,
+    backgroundColor: '#F5F5F7',
+  },
+  textPackageVolum: {
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 14,
+    lineHeight: 17,
+    color: '#000000',
+  },
   divNamePackage2: {
     flexDirection: 'row',
     marginTop: 25,

@@ -13,6 +13,7 @@ import {
   HomeRoot,
   DeliverListRoot,
   ResidentListRoot,
+  ProfilRoot,
 } from '../../constants/routes';
 import { SvgXml } from 'react-native-svg';
 
@@ -76,8 +77,8 @@ const MenuBotom = ({ navigation }) => {
       title: t('menu:profile'),
       iconActive: profilActiveIcon,
       icon: profilIcon,
-      root: null,
-      isActive: routeCurrent === null,
+      root: ProfilRoot,
+      isActive: routeCurrent === ProfilRoot,
     },
   ];
 
