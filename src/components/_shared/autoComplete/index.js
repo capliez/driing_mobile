@@ -80,6 +80,7 @@ const Autocomplete = ({ options, setValue }) => {
         style={styles.inputSearch}
         onChangeText={onChange}
         onKeyDown={onKeyDown}
+        placeholderTextColor={'#B0B6BB'}
         placeholder={'Entrer le nom ici'}
         value={searchTerm}
       />

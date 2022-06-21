@@ -43,6 +43,7 @@ const InputSearch = ({ onChangeText, value, allBuildings, isHandedOver }) => {
         placeholder={t('inputSearch')}
         keyboardType="default"
         clearButtonMode="always"
+        placeholderTextColor={'#B0B6BB'}
       />
     </View>
   );
