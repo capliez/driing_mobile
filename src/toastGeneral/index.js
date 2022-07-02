@@ -6,6 +6,10 @@ import {
   getEmptyErrorPackage,
   getEmptySuccessPackage,
 } from '../redux/packages/actions';
+import {
+  getEmptyErrorResident,
+  getEmptySuccessResident,
+} from '../redux/residents/actions';
 
 const ToastGeneral = () => {
   const dispatch = useDispatch();
@@ -14,7 +18,9 @@ const ToastGeneral = () => {
   const { error: errorPackage, success: successPackage } = useSelector(
     (state) => state.packages,
   );
-  const { error: errorResident } = useSelector((state) => state.residents);
+  const { error: errorResident, success: successResident } = useSelector(
+    (state) => state.residents,
+  );
 
   useEffect(() => {
     isNotEmpty(errorAuth) && toastError(errorAuth);
@@ -36,7 +42,13 @@ const ToastGeneral = () => {
 
   useEffect(() => {
     isNotEmpty(errorResident) && toastError(errorResident);
-  }, [errorResident]);
+    successResident && toastSuccess('Mis à jour avec succès');
+
+    return () => {
+      dispatch(getEmptySuccessResident());
+      dispatch(getEmptyErrorResident());
+    };
+  }, [dispatch, errorResident, successResident]);
 
   return <></>;
 };

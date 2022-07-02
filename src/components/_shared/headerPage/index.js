@@ -10,6 +10,7 @@ const HeaderComponent = ({
   title,
   isBack,
   functionBack,
+  isResident,
 }) => {
   const { t } = useTranslation('deliver');
 
@@ -34,12 +35,37 @@ const HeaderComponent = ({
           </Pressable>
         </View>
       )}
-      <Text style={styles.textHeader}>{title}</Text>
+
+      {isResident ? (
+        <View
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={styles.textHeader}>{title}</Text>
+          <Pressable
+            onPress={() => navigation.navigate(route)}
+            style={styles.btnResident}
+          >
+            <Text style={{ color: 'white' }}>Ajouter +</Text>
+          </Pressable>
+        </View>
+      ) : (
+        <Text style={styles.textHeader}>{title}</Text>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  btnResident: {
+    backgroundColor: '#131314',
+    borderRadius: 10,
+    padding: 10,
+  },
   divIcon: {
     padding: 5,
     borderWidth: 1,
@@ -61,6 +87,8 @@ HeaderComponent.propTypes = {
   route: PropTypes.string,
   title: PropTypes.string,
   isBack: PropTypes.bool,
+  functionBack: PropTypes.func,
+  isResident: PropTypes.bool,
 };
 
 export default HeaderComponent;

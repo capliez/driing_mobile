@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { lazy } from 'react';
-import { Text, View, FlatList } from 'react-native';
+import { Text, View, FlatList, ActivityIndicator } from 'react-native';
 import { getResidents } from '../../redux/residents/actions';
 import { useDispatch } from 'react-redux';
-
+import { isNotEmpty, isNotEmptyArray, marginTop } from '../../utils';
 const NoResidentLazyComponent = lazy(() => import('../resident/noResident'));
 
 const InputSearchLazyComponent = lazy(() => import('../_shared/inputSearch'));
@@ -28,7 +28,6 @@ const ListResidentComponent = ({
       return fullName.toLowerCase().includes(searchTerm.toLowerCase());
     });
   };
-
   return (
     <>
       <InputSearchLazyComponent
@@ -36,7 +35,11 @@ const ListResidentComponent = ({
         onChangeText={onChangeText}
       />
 
-      {residents ? (
+      {loadingResidents && !isNotEmpty(residents) && (
+        <ActivityIndicator style={{ marginTop }} size="large" color="#000000" />
+      )}
+
+      {residents && (
         <View style={{ marginVertical: 15, flex: 1 }}>
           {residents && residents.length > 0 ? (
             <FlatList
@@ -64,7 +67,9 @@ const ListResidentComponent = ({
             </Text>
           )}
         </View>
-      ) : (
+      )}
+
+      {!isNotEmptyArray(residents) && !loadingResidents && (
         <NoResidentLazyComponent navigation={navigation} />
       )}
     </>

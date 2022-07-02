@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { useRef, useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import {
   Dimensions,
   Pressable,
@@ -9,12 +8,9 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
-  TouchableOpacity,
 } from 'react-native';
 import HeaderComponent from '../../components/_shared/headerPage';
 import { HomeRoot } from '../../constants/routes';
-import IconIonicons from 'react-native-vector-icons/Ionicons';
 import AutoComplete from '../../components/_shared/autoComplete';
 import ItemResident from '../../components/resident/item';
 import IconMaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -44,7 +40,6 @@ const slideWidth = wp(18);
 const itemWidth = slideWidth * 2;
 
 const AddPackagePage = ({ navigation }) => {
-  const { t } = useTranslation('deliver');
   const [nbPackageActive, setNbPackageActive] = useState(null);
   const [residentCurrent, setResidentCurrent] = useState(null);
   const [isPicture] = useState(false);
@@ -55,9 +50,7 @@ const AddPackagePage = ({ navigation }) => {
   const { all: allBuildings, loading: loadingBuilding } = useSelector(
     (state) => state.buildings,
   );
-  const { all: allResidents, loading: loadingResidents } = useSelector(
-    (state) => state.residents,
-  );
+  const { all: allResidents } = useSelector((state) => state.residents);
   const { loading: loadingPackages, success: successPackages } = useSelector(
     (state) => state.packages,
   );
@@ -103,7 +96,11 @@ const AddPackagePage = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
-        <HeaderComponent route={HomeRoot} navigation={navigation} />
+        <HeaderComponent
+          route={HomeRoot}
+          navigation={navigation}
+          isBack={true}
+        />
         <View style={styles.divNamePackage}>
           <Text style={styles.textTitle}>Indiquez les détails du colis</Text>
 

@@ -16,7 +16,14 @@ const ItemResident = ({ item, navigation, onClick }) => {
           <UserAvatar style={styles.userProfile} name={item.lastName} />
         </View>
         <View style={styles.divItemLabel}>
-          <View style={{ marginBottom: 5 }}>
+          <View
+            style={{
+              marginBottom: 5,
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
             <Text
               accessible
               accessibilityRole="text"
@@ -25,6 +32,18 @@ const ItemResident = ({ item, navigation, onClick }) => {
             >
               {item.lastName.toUpperCase()}
             </Text>
+            {item.packageHandedOver && (
+              <View
+                style={{
+                  marginLeft: 10,
+                  backgroundColor: '#F2EEE3',
+                  padding: 5,
+                  borderRadius: 6,
+                }}
+              >
+                <Text>Colis en attente</Text>
+              </View>
+            )}
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text

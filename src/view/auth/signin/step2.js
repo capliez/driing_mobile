@@ -21,9 +21,9 @@ const Step2SignIn = ({ navigation, changeStep, steps }) => {
   };
 
   const onSubmit = () => {
-    if (isNotEmpty(fields.password) && isNotEmpty(fields.phone))
+    if (isNotEmpty(fields.password) && isNotEmpty(fields.phone)) {
       dispatch(loginUser(fields));
-    else alert('Merci de remplir les champs');
+    } else alert('Merci de remplir les champs');
   };
 
   return (

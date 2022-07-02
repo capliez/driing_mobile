@@ -73,9 +73,10 @@ function* loginWithEmailPassword({ payload }) {
 
       try {
         const result = yield call(loginWithCookieAsync);
-        if (result?.status === 200)
+        if (result?.status === 200) {
           yield put(loginUserSuccess(result.data['hydra:member'][0]));
-        else yield put(loginUserError(MSG_ERROR));
+          yield put(getBuildings());
+        } else yield put(loginUserError(MSG_ERROR));
       } catch (error) {
         yield put(loginUserError(MSG_ERROR));
       }
@@ -85,7 +86,6 @@ function* loginWithEmailPassword({ payload }) {
       );
     }
   } catch (error) {
-    console.log(error);
     yield put(loginUserError(MSG_ERROR));
   }
 }

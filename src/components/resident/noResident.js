@@ -4,8 +4,9 @@ import { SvgXml } from 'react-native-svg';
 import { AddPackageRoot } from '../../constants/routes';
 import ImgNoPackage from '../../images/packages/noPackage';
 import ButtonComponent from '../_shared/button';
+import PropTypes from 'prop-types';
 
-const NoPackage = ({ navigation }) => {
+const NoPackage = ({ navigation, isSearch }) => {
   return (
     <View style={styles.divMain}>
       <SvgXml
@@ -14,7 +15,11 @@ const NoPackage = ({ navigation }) => {
         width={195}
         height={250}
       />
-      <Text style={styles.text1}>Aucun résident actuellement !</Text>
+      <Text style={styles.text1}>
+        {isSearch
+          ? 'Aucun résident de ce nom !'
+          : 'Aucun résident actuellement !'}
+      </Text>
       <Text style={styles.text2}>
         N’oubliez pas d’ajouter des résidents afin de les mettre à la liste.
       </Text>
@@ -52,5 +57,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
+
+NoPackage.propTypes = {
+  navigation: PropTypes.any,
+  isSearch: PropTypes.bool,
+};
 
 export default NoPackage;

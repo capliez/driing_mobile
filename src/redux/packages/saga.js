@@ -44,7 +44,9 @@ function* getCountPackagesHandedOver({ payload }) {
     if (result?.status === 200) {
       yield put(
         getPackagesNoHandedOverSuccess(
-          parseInt(result.data['hydra:member'][0]),
+          parseInt(
+            result.data['hydra:member'][0] ? result.data['hydra:member'][0] : 0,
+          ),
         ),
       );
     } else {
@@ -101,6 +103,7 @@ const registerPackageAsync = async (item) => {
   const { resident, nbPackage, isBulky, guardian, building } = item;
   return await Axios.post(PACKAGES_API, {
     isBulky,
+    isHandedOver: false,
     nbPackage,
     resident: `/api/residents/${resident.id}`,
     building: `/api/buildings/${building.id}`,
@@ -130,7 +133,7 @@ export function* watchUpdatePackage() {
 
 const updatePackageAsync = async (id) => {
   return await Axios.put(`${PACKAGES_API}/${id}`, {
-    isBulky: true,
+    isHandedOver: true,
   })
     .then((result) => result)
     .catch((error) => error.response);

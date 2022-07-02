@@ -10,6 +10,9 @@ import {
   SignInRoot,
   DeliverListPackageRoot,
   ProfilRoot,
+  ContactSyndicRoot,
+  AddResidentRoot,
+  AddResidentStep1Root,
 } from './constants/routes';
 import { useSelector } from 'react-redux';
 import ToastGeneral from './toastGeneral';
@@ -28,6 +31,9 @@ const ListDeliverPackageScreen = lazy(
   () => import('./view/deliver/listPackage'),
 );
 const ProfilScreen = lazy(() => import('./view/profil'));
+const SyndicInfoScreen = lazy(() => import('./view/syndicInfo'));
+const AddResidentScreen = lazy(() => import('./view/addResident'));
+const AddResidentStep1Screen = lazy(() => import('./view/addResident/step1'));
 
 export default () => {
   const {
@@ -98,6 +104,27 @@ export default () => {
           <Stack.Screen
             name={ProfilRoot}
             component={ProfilScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name={ContactSyndicRoot}
+            component={SyndicInfoScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name={AddResidentRoot}
+            component={AddResidentScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name={AddResidentStep1Root}
+            component={AddResidentStep1Screen}
             options={{
               headerShown: false,
             }}

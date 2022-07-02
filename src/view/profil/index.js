@@ -9,16 +9,27 @@ import {
 } from 'react-native';
 import LayoutDefault from '../../layout';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { SignInRoot } from '../../constants/routes';
+import { logoutUser } from '../../redux/auth/actions';
 
 const BlockContactComponent = lazy(
   () => import('../../components/_shared/block/contact'),
 );
 const ProfilPage = ({ navigation }) => {
-  const { currentUser } = useSelector((state) => state.authUser);
+  const dispatch = useDispatch();
+  const { currentUser, loading: loadingUser } = useSelector(
+    (state) => state.authUser,
+  );
   const { all: allBuildings, loading: loadingBuilding } = useSelector(
     (state) => state.buildings,
   );
+
+  const logout = () => {
+    navigation.navigate(SignInRoot);
+    dispatch(logoutUser());
+  };
+
   return (
     <LayoutDefault navigation={navigation}>
       <View
@@ -56,7 +67,7 @@ const ProfilPage = ({ navigation }) => {
         <Text style={styles.textName}>{currentUser.fullName}</Text>
         <Text>🏢 Immeuble : {allBuildings.address}</Text>
       </View>
-      <BlockContactComponent />
+      <BlockContactComponent navigation={navigation} />
       <View style={{ marginTop: 15 }}>
         <Text style={styles.textPackage}>Historique des colis remis</Text>
         <View

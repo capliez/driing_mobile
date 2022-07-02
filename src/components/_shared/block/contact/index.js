@@ -2,7 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { AddPackageRoot } from '../../../../constants/routes';
+import {
+  AddPackageRoot,
+  ContactSyndicRoot,
+} from '../../../../constants/routes';
 import ImgContact from '../../../../images/block/contact';
 const BlockContact = ({ navigation }) => {
   return (
@@ -12,7 +15,7 @@ const BlockContact = ({ navigation }) => {
           Un problème à signaler, une demande particulière ?
         </Text>
         <Pressable
-          onPress={() => navigation.navigate(AddPackageRoot)}
+          onPress={() => navigation.navigate(ContactSyndicRoot)}
           style={styles.btn}
         >
           <Text style={styles.textBtn}>Contacter votre syndic</Text>

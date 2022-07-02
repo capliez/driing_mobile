@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import Moment from 'react-moment';
-import { Image, StyleSheet, Text, View, Pressable, Modal } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Modal } from 'react-native';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
-import { DeliverCurrentRoot } from '../../constants/routes';
 import { useTranslation } from 'react-i18next';
 import UserAvatar from 'react-native-user-avatar';
 import OnePackageImg from '../../images/packages/onePackage';
@@ -11,15 +10,19 @@ import { SvgXml } from 'react-native-svg';
 import ButtonComponent from '../../components/_shared/button';
 import { useDispatch } from 'react-redux';
 import { updatePackage } from '../../redux/packages/actions';
+import { DeliverListRoot } from '../../constants/routes';
 
-const ItemPackage = ({ item, loadingPackages }) => {
+const ItemPackage = ({ item, loadingPackages, navigation }) => {
   const { t } = useTranslation('deliver');
   const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
 
-  const submitBulky = () => {
+  const submitHandedOver = () => {
     dispatch(updatePackage(item.id));
+    setModalVisible(false);
+    navigation.navigate(DeliverListRoot);
   };
+
   return (
     <>
       <Modal
@@ -130,8 +133,8 @@ const ItemPackage = ({ item, loadingPackages }) => {
               </View>
             </View>
             <ButtonComponent
-              isDisabled={loadingPackages || item.isBulky}
-              onClick={() => submitBulky()}
+              isDisabled={loadingPackages || item.isHandedOver}
+              onClick={() => submitHandedOver()}
               text="Colis remis"
             />
           </View>
@@ -302,6 +305,8 @@ const styles = StyleSheet.create({
 
 ItemPackage.propTypes = {
   item: PropTypes.object,
+  loadingPackages: PropTypes.bool,
+  navigation: PropTypes.any,
 };
 
 export default ItemPackage;

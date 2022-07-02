@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { lazy, useEffect } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { Trans } from 'react-i18next';
 import {
   SafeAreaView,
   ScrollView,
@@ -19,10 +19,7 @@ import {
 } from '../../utils';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPackagesNoHandedOver } from '../../redux/packages/actions';
-import {
-  searchResident,
-  searchResidentEmpty,
-} from '../../redux/residents/actions';
+import { getBuildings } from '../../redux/buildings/actions';
 
 const InputSearchComponent = lazy(
   () => import('../../components/_shared/inputSearch'),
@@ -45,10 +42,12 @@ const OnBoardingComponent = lazy(() => import('../../components/onboarding'));
 const ItemResidentLazyComponent = lazy(
   () => import('../../components/resident/item'),
 );
+const NoResidentLazyComponent = lazy(
+  () => import('../../components/resident/noResident'),
+);
 
 const HomePage = ({ navigation }) => {
   const [searchTerm, onChangeText] = React.useState('');
-  const { t } = useTranslation(['deliver', 'translations']);
   const { nbHandedOver: nbHandedOverPackages, loading: loadingPackage } =
     useSelector((state) => state.packages);
   const { all: allBuildings, loading: loadingBuilding } = useSelector(
@@ -60,6 +59,12 @@ const HomePage = ({ navigation }) => {
   const { currentUser } = useSelector((state) => state.authUser);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!loadingBuilding && !allBuildings) {
+      dispatch(getBuildings());
+    }
+  }, [allBuildings, dispatch, loadingBuilding]);
 
   useEffect(() => {
     if (!loadingBuilding && isNotEmpty(allBuildings)) {
@@ -102,19 +107,17 @@ const HomePage = ({ navigation }) => {
           value={searchTerm}
           onChangeText={onChangeText}
         />
+
         {searchTerm && searchTerm.length > 1 ? (
-          <View style={styles.divList}>
+          <View>
             {!loadingResident &&
               isNotEmptyArray(allResidentSearch) &&
               renderGridList()}
             {!loadingResident && !isNotEmptyArray(allResidentSearch) && (
-              <Text
-                accessible
-                accessibilityRole="text"
-                accessibilityLabel={t('textNoPackagesPending')}
-              >
-                {t('textNoPackagesPending')}
-              </Text>
+              <NoResidentLazyComponent
+                isSearch={true}
+                navigation={navigation}
+              />
             )}
 
             {loadingResident && (

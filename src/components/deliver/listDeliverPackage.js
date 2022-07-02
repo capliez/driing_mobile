@@ -13,6 +13,7 @@ const ListDeliverPackageComponent = ({
   t,
   navigation,
   loadingPackages,
+  idBuilding,
 }) => {
   const [searchTerm, onChangeText] = useState('');
 
@@ -32,8 +33,10 @@ const ListDeliverPackageComponent = ({
               keyExtractor={(item) => item.id.toString()}
               renderItem={(item) => (
                 <ItemPackageLazyComponent
+                  navigation={navigation}
                   loadingPackages={loadingPackages}
                   key={item.index}
+                  idBuilding={idBuilding}
                   item={item.item}
                 />
               )}
@@ -59,6 +62,7 @@ ListDeliverPackageComponent.propTypes = {
   packages: PropTypes.array,
   t: PropTypes.any,
   navigation: PropTypes.object,
+  loadingPackages: PropTypes.bool,
 };
 
 export default ListDeliverPackageComponent;

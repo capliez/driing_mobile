@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { HomeRoot } from '../../constants/routes';
 import LayoutDefault from '../../layout';
 import { getPackages } from '../../redux/packages/actions';
-import { isNotEmpty } from '../../utils';
+import { isNotEmpty, isNotEmptyArray } from '../../utils';
 
 const HeaderLazyComponent = lazy(
   () => import('../../components/_shared/headerPage'),
@@ -23,11 +23,15 @@ const DeliverPage = ({ navigation }) => {
   const { all: allBuildings, loading: loadingBuilding } = useSelector(
     (state) => state.buildings,
   );
+
+  const { allSearch: allResidentSearch, loading: loadingResident } =
+    useSelector((state) => state.residents);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (!loadingBuilding && isNotEmpty(allBuildings)) {
-      !isNotEmpty(allPackages) && dispatch(getPackages(allBuildings.id));
+      !isNotEmptyArray(allPackages) && dispatch(getPackages(allBuildings.id));
     }
   }, [allBuildings, dispatch, loadingBuilding, allPackages]);
 
@@ -41,9 +45,11 @@ const DeliverPage = ({ navigation }) => {
 
       <ListDeliverLazyComponent
         t={t}
+        allResidentSearch={allResidentSearch}
+        loadingResident={loadingResident}
         loadingPackages={loadingPackages}
         items={allPackages}
-        idBuilding={allBuildings.id}
+        allBuildings={allBuildings}
         navigation={navigation}
       />
     </LayoutDefault>

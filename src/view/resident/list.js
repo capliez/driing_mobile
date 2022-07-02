@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { lazy, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PACKAGES } from '../../constants/packages';
-import { HomeRoot } from '../../constants/routes';
+import { AddResidentRoot } from '../../constants/routes';
 import LayoutDefault from '../../layout';
 import { useSelector, useDispatch } from 'react-redux';
 import { getResidents } from '../../redux/residents/actions';
@@ -40,7 +39,8 @@ const ListResident = ({ navigation }) => {
     <LayoutDefault navigation={navigation}>
       <HeaderLazyComponent
         title={'🎈 Vos habitants'}
-        route={HomeRoot}
+        route={AddResidentRoot}
+        isResident={true}
         navigation={navigation}
       />
       <ListResidentLazyComponent

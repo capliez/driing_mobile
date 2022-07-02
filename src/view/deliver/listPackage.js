@@ -19,6 +19,7 @@ const DeliverPackagePage = ({ navigation, route }) => {
   const { t } = useTranslation('deliver');
   const { items, date } = route.params;
   const { loading: loadingPackages } = useSelector((state) => state.packages);
+  const { all: allBuildings } = useSelector((state) => state.buildings);
   return (
     <LayoutDefault navigation={navigation}>
       <HeaderLazyComponent
@@ -30,6 +31,7 @@ const DeliverPackagePage = ({ navigation, route }) => {
       <ListDeliverPackageLazyComponent
         t={t}
         packages={items}
+        idBuilding={allBuildings.id}
         loadingPackages={loadingPackages}
         navigation={navigation}
       />

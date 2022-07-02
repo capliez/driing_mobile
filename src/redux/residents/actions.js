@@ -71,9 +71,9 @@ export const getResidentCurrrentError = (message) => ({
 });
 
 /* POST */
-export const registerResident = (location) => ({
+export const registerResident = (resident) => ({
   type: REGISTER_RESIDENT,
-  payload: location,
+  payload: resident,
 });
 export const registerResidentSuccess = (location) => ({
   type: REGISTER_RESIDENT_SUCCESS,

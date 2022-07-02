@@ -96,10 +96,10 @@ export function* watchRegisterResident() {
 }
 
 const registerResidentAsync = async (item) => {
-  const { lastName, email, phone, building } = item;
+  const { lastName, phone, building } = item;
   return await Axios.post(RESIDENTS_API, {
     lastName,
-    email,
+    isEnabled: true,
     phone,
     building: `/api/buildings/${building}`,
   })
