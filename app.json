@@ -1,8 +1,12 @@
 {
   "expo": {
-    "name": "driing_mobile",
-    "slug": "driing_mobile",
+    "owner": "capliez",
+    "name": "driing",
+    "slug": "driing",
+    "privacy": "public",
+    "description": "Le secteur du gardiennage étant très peu ou pas du tout digitalisé, nous avons eu dans l’idée de développer une application mobile permettant de faciliter le système de gestion des colis.",
     "version": "1.0.0",
+    "githubUrl": "https://github.com/capliez/driing_mobile.git",
     "orientation": "portrait",
     "icon": "./assets/favicon.png",
     "splash": {
