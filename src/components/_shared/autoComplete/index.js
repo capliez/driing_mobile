@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
-import ItemDeliver from '../../deliver/item';
 import ItemResident from '../../resident/item';
 
 const Autocomplete = ({ options, setValue }) => {
@@ -100,7 +99,7 @@ const styles = StyleSheet.create({
 });
 
 Autocomplete.propTypes = {
-  options: PropTypes.instanceOf(Array).isRequired,
+  options: PropTypes.array,
   setValue: PropTypes.func,
 };
 

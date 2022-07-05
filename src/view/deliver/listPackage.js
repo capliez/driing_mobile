@@ -23,7 +23,7 @@ const DeliverPackagePage = ({ navigation, route }) => {
   return (
     <LayoutDefault navigation={navigation}>
       <HeaderLazyComponent
-        title={'Colis du ' + moment(date).local('fr').format('LL')}
+        title={'Colis du ' + moment(date).locale('fr').format('LL')}
         route={DeliverListRoot}
         navigation={navigation}
         isBack={true}

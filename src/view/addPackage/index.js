@@ -96,211 +96,213 @@ const AddPackagePage = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
-        <HeaderComponent
-          route={HomeRoot}
-          navigation={navigation}
-          isBack={true}
-        />
-        <View style={styles.divNamePackage}>
-          <Text style={styles.textTitle}>Indiquez les détails du colis</Text>
+        <View style={{ margin: 15 }}>
+          <HeaderComponent
+            route={HomeRoot}
+            navigation={navigation}
+            isBack={true}
+          />
+          <View style={styles.divNamePackage}>
+            <Text style={styles.textTitle}>Indiquez les détails du colis</Text>
 
-          <View style={styles.divNamePackage2}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <Text style={styles.textLabel}>Indiquez le nom sur le colis</Text>
-              {residentCurrent && <IconResult />}
-            </View>
-            {residentCurrent && (
-              <Pressable
-                disabled={loadingPackages}
-                onPress={() => setResidentCurrent(null)}
-                style={{ flexDirection: 'row', alignItems: 'center' }}
+            <View style={styles.divNamePackage2}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
               >
-                <Text>Modifier</Text>
-                <IconMaterialCommunity
-                  color={'#000000'}
-                  size={16}
-                  name="pencil-outline"
-                />
-              </Pressable>
+                <Text style={styles.textLabel}>
+                  Indiquez le nom sur le colis
+                </Text>
+                {residentCurrent && <IconResult />}
+              </View>
+              {residentCurrent && (
+                <Pressable
+                  disabled={loadingPackages}
+                  onPress={() => setResidentCurrent(null)}
+                  style={{ flexDirection: 'row', alignItems: 'center' }}
+                >
+                  <Text>Modifier</Text>
+                  <IconMaterialCommunity
+                    color={'#000000'}
+                    size={16}
+                    name="pencil-outline"
+                  />
+                </Pressable>
+              )}
+            </View>
+
+            {residentCurrent ? (
+              <ItemResident item={residentCurrent} />
+            ) : (
+              <AutoComplete
+                setValue={setResidentCurrent}
+                options={allResidents}
+              />
             )}
           </View>
 
-          {residentCurrent ? (
-            <ItemResident item={residentCurrent} />
-          ) : (
-            <AutoComplete
-              setValue={setResidentCurrent}
-              options={allResidents}
-            />
-          )}
-        </View>
+          {residentCurrent && (
+            <View style={styles.divNbPackage}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={styles.textLabel}>Nombre de colis</Text>
+                {nbPackageActive && <IconResult />}
+              </View>
 
-        {residentCurrent && (
-          <View style={styles.divNbPackage}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <Text style={styles.textLabel}>Nombre de colis</Text>
-              {nbPackageActive && <IconResult />}
-            </View>
-
-            <View style={styles.divItemsPackage}>
-              <Carousel
-                ref={carouselref}
-                data={[
-                  { id: 1, value: 1 },
-                  { id: 2, value: 2 },
-                  { id: 3, value: 3 },
-                  { id: 4, value: 4 },
-                  { id: 5, value: 5 },
-                  { id: 6, value: 6 },
-                ]}
-                renderItem={({ item }) => (
-                  <Pressable
-                    disabled={loadingPackages}
-                    onPress={() => setNbPackageActive(item.value)}
-                    style={[
-                      styles.divItemPackage,
-                      nbPackageActive &&
+              <View style={styles.divItemsPackage}>
+                <Carousel
+                  ref={carouselref}
+                  data={[
+                    { id: 1, value: 1 },
+                    { id: 2, value: 2 },
+                    { id: 3, value: 3 },
+                    { id: 4, value: 4 },
+                    { id: 5, value: 5 },
+                    { id: 6, value: 6 },
+                  ]}
+                  renderItem={({ item }) => (
+                    <Pressable
+                      disabled={loadingPackages}
+                      onPress={() => setNbPackageActive(item.value)}
+                      style={[
+                        styles.divItemPackage,
+                        nbPackageActive &&
                         nbPackageActive === item.value && {
                           backgroundColor: '#131314',
                         },
-                    ]}
-                    key={item.id}
-                  >
-                    <Text
-                      style={[
-                        styles.textItemPackage,
-                        nbPackageActive &&
+                      ]}
+                      key={item.id}
+                    >
+                      <Text
+                        style={[
+                          styles.textItemPackage,
+                          nbPackageActive &&
                           nbPackageActive === item.value && {
                             color: '#FFFFFF',
                           },
-                      ]}
-                    >
-                      {item.value}
-                    </Text>
+                        ]}
+                      >
+                        {item.value}
+                      </Text>
+                    </Pressable>
+                  )}
+                  itemWidth={itemWidth}
+                  separatorWidth={0}
+                  containerWidth={viewportWidth * 1}
+                  inActiveScale={0.95}
+                />
+              </View>
+            </View>
+          )}
+          {nbPackageActive && residentCurrent && (
+            <View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={styles.textLabel}>Détails colis</Text>
+                {nbPackageActive && <IconResult />}
+              </View>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginTop: 15,
+                }}
+              >
+                <View
+                  style={[styles.divPackages, isBulky && styles.packageActive]}
+                >
+                  <Pressable
+                    disabled={loadingPackages}
+                    onPress={() => setIsBulky(true)}
+                    style={styles.buttonPackage}
+                  >
+                    <SvgXml
+                      title={'Colis volumineux'}
+                      xml={PackageImg}
+                      width={76}
+                      height={58}
+                    />
+                    <SvgXml
+                      title={'Colis volumineux'}
+                      xml={MetreImg}
+                      width={12}
+                      height={60}
+                    />
                   </Pressable>
-                )}
-                itemWidth={itemWidth}
-                separatorWidth={0}
-                containerWidth={viewportWidth * 0.8}
-                inActiveScale={0.95}
-              />
-            </View>
-          </View>
-        )}
-        {nbPackageActive && residentCurrent && (
-          <View style={{ marginHorizontal: 15, padding: 10 }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <Text style={styles.textLabel}>Détails colis</Text>
-              {nbPackageActive && <IconResult />}
-            </View>
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginTop: 15,
-              }}
-            >
-              <View
-                style={[styles.divPackages, isBulky && styles.packageActive]}
-              >
-                <Pressable
-                  disabled={loadingPackages}
-                  onPress={() => setIsBulky(true)}
-                  style={styles.buttonPackage}
+                  <Text style={styles.textPackageVolum}>Colis volumineux</Text>
+                </View>
+                <View
+                  style={[
+                    styles.divPackages,
+                    isBulky == false && styles.packageActive,
+                  ]}
                 >
-                  <SvgXml
-                    title={'Colis volumineux'}
-                    xml={PackageImg}
-                    width={76}
-                    height={58}
-                  />
-                  <SvgXml
-                    title={'Colis volumineux'}
-                    xml={MetreImg}
-                    width={12}
-                    height={60}
-                  />
-                </Pressable>
-                <Text style={styles.textPackageVolum}>Colis volumineux</Text>
+                  <Pressable
+                    disabled={loadingPackages}
+                    onPress={() => setIsBulky(false)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <SvgXml
+                      title={'Colis non volumineux'}
+                      xml={PackageImg}
+                      width={76}
+                      height={58}
+                    />
+                  </Pressable>
+                  <Text style={styles.textPackageVolum}>
+                    Colis non volumineux
+                  </Text>
+                </View>
               </View>
-              <View
-                style={[
-                  styles.divPackages,
-                  isBulky == false && styles.packageActive,
-                ]}
-              >
-                <Pressable
-                  disabled={loadingPackages}
-                  onPress={() => setIsBulky(false)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                >
-                  <SvgXml
-                    title={'Colis non volumineux'}
-                    xml={PackageImg}
-                    width={76}
-                    height={58}
-                  />
-                </Pressable>
-                <Text style={styles.textPackageVolum}>
-                  Colis non volumineux
-                </Text>
-              </View>
-            </View>
-            <ButtonComponent
-              isDisabled={loadingPackages}
-              onClick={() => submitPackage()}
-              text="Ajouter le colis"
-            />
-          </View>
-        )}
-        {nbPackageActive && isPicture && residentCurrent && (
-          <View style={{ marginHorizontal: 15, padding: 10 }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <Text style={styles.textLabel}>Photo du bordereau du colis</Text>
-              {nbPackageActive && <IconResult />}
-            </View>
-            <View style={styles.divPictures}>
-              <Text style={styles.textPicture}>
-                Veuillez prendre en photo le bordereau indiquant le nom et le
-                détail du colis.
-              </Text>
               <ButtonComponent
-                onClick={() => alert('Clique')}
-                text="Prendre la photo"
-                iconName="camera-outline"
-                classBtn={styles.btnPicture}
+                isDisabled={loadingPackages}
+                onClick={() => submitPackage()}
+                text="Ajouter le colis"
               />
             </View>
-            <ButtonComponent
-              onClick={() => alert('Ajouter')}
-              text="Ajouter le colis"
-            />
-          </View>
-        )}
+          )}
+          {nbPackageActive && isPicture && residentCurrent && (
+            <View style={{ marginHorizontal: 15, padding: 10 }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={styles.textLabel}>
+                  Photo du bordereau du colis
+                </Text>
+                {nbPackageActive && <IconResult />}
+              </View>
+              <View style={styles.divPictures}>
+                <Text style={styles.textPicture}>
+                  Veuillez prendre en photo le bordereau indiquant le nom et le
+                  détail du colis.
+                </Text>
+                <ButtonComponent
+                  onClick={() => alert('Clique')}
+                  text="Prendre la photo"
+                  iconName="camera-outline"
+                  classBtn={styles.btnPicture}
+                />
+              </View>
+            </View>
+          )}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -331,7 +333,7 @@ const styles = StyleSheet.create({
   },
   divNamePackage2: {
     flexDirection: 'row',
-    marginTop: 25,
+    marginTop: 20,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
@@ -344,16 +346,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   divNamePackage: {
-    marginTop: 15,
     backgroundColor: 'white',
-    marginHorizontal: 15,
-    padding: 10,
     borderRadius: 5,
   },
   divNbPackage: {
+    marginVertical: 20,
     backgroundColor: 'white',
-    marginHorizontal: 15,
-    padding: 10,
     borderRadius: 5,
   },
   textTitle: {

@@ -1,13 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import {
-  Platform,
-  Pressable,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import {
   HomeRoot,
@@ -16,6 +9,7 @@ import {
   ProfilRoot,
 } from '../../constants/routes';
 import { SvgXml } from 'react-native-svg';
+import { useSelector } from 'react-redux';
 
 //Icon
 import homeActiveIcon from '../../images/menu/homeActive';
@@ -31,11 +25,14 @@ import profilActiveIcon from '../../images/menu/profilActive';
 import profilIcon from '../../images/menu/profil';
 
 const MenuBotom = ({ navigation }) => {
-  const marginTop = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
   const { t } = useTranslation('menu');
   const [indexCurrent, setIndexCurrent] = useState(navigation.getState().index);
   const [routeCurrent, setRouteCurrent] = useState(
     navigation.getState().routes[navigation.getState().index].name,
+  );
+
+  const { nbHandedOver: nbHandedOverPackages } = useSelector(
+    (state) => state.packages,
   );
 
   useEffect(() => {
@@ -119,6 +116,24 @@ const MenuBotom = ({ navigation }) => {
               style={{ alignItems: 'center' }}
               onPress={() => m.root && navigation.navigate(m.root)}
             >
+              {m.root == DeliverListRoot && nbHandedOverPackages > 0 && (
+                <View
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#FF2D55',
+                    width: 22,
+                    height: 22,
+                    borderRadius: 20,
+                    position: 'absolute',
+                    right: 20,
+                    zIndex: 5,
+                  }}
+                >
+                  <Text style={{ color: 'white' }}>{nbHandedOverPackages}</Text>
+                </View>
+              )}
               <SvgXml
                 title={m.title}
                 xml={m.isActive ? m.iconActive : m.icon}

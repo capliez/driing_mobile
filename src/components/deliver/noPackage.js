@@ -9,7 +9,7 @@ const NoPackage = ({ navigation }) => {
   return (
     <View style={styles.divMain}>
       <SvgXml
-        title={'Aucun colis en attente'}
+        title={'Aucun colis en attente actuellement !'}
         xml={ImgNoPackage}
         width={195}
         height={250}

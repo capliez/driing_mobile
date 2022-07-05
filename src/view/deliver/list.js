@@ -31,9 +31,9 @@ const DeliverPage = ({ navigation }) => {
 
   useEffect(() => {
     if (!loadingBuilding && isNotEmpty(allBuildings)) {
-      !isNotEmptyArray(allPackages) && dispatch(getPackages(allBuildings.id));
+      dispatch(getPackages(allBuildings.id));
     }
-  }, [allBuildings, dispatch, loadingBuilding, allPackages]);
+  }, []);
 
   return (
     <LayoutDefault navigation={navigation}>

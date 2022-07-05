@@ -1,18 +1,22 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import UserAvatar from 'react-native-user-avatar';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 import OnePackageImg from '../../images/packages/onePackage';
+import TwoPackageImg from '../../images/packages/twoPackage';
+import ThreePackageImg from '../../images/packages/threePackage';
+import FourPackageImg from '../../images/packages/fourPackage';
+import FivePackageImg from '../../images/packages/fivePackage';
+import SixPackageImg from '../../images/packages/sixPackage';
+import SevenPackageImg from '../../images/packages/sevenPackage';
+import EightPackageImg from '../../images/packages/eightPackage';
 import moment from 'moment';
 import 'moment/locale/fr';
 import { DeliverListPackageRoot } from '../../constants/routes';
 
 const ItemOneRow = ({ date, navigation, onClick }) => {
-  const { t } = useTranslation('deliver');
-
   const nbPackages = (items) => {
     let count = 0;
 
@@ -23,10 +27,14 @@ const ItemOneRow = ({ date, navigation, onClick }) => {
 
   const renderResident = (items) => {
     const arrayresident = [];
-    items.map((i) => {
-      const indexCurrent = arrayresident.findIndex((a) => a === i.resident.id);
-      if (indexCurrent === -1) arrayresident.push(i.resident.id);
-    });
+
+    for (var i = 0; i < (items.length > 3 ? 3 : items.length); i++) {
+      const indexCurrent = arrayresident.findIndex(
+        (a) => a === items[i].resident.id,
+      );
+      if (indexCurrent === -1) arrayresident.push(items[i].resident.id);
+    }
+
     return arrayresident.map((a) => {
       const residentCurrent = items.find((i) => i.resident.id === a);
       return (
@@ -37,6 +45,27 @@ const ItemOneRow = ({ date, navigation, onClick }) => {
         />
       );
     });
+  };
+
+  const renderImgPackages = (nb) => {
+    switch (nb) {
+      case 1:
+        return OnePackageImg;
+      case 2:
+        return TwoPackageImg;
+      case 3:
+        return ThreePackageImg;
+      case 4:
+        return FourPackageImg;
+      case 5:
+        return FivePackageImg;
+      case 6:
+        return SixPackageImg;
+      case 7:
+        return SevenPackageImg;
+      default:
+        return EightPackageImg;
+    }
   };
 
   return Object.entries(date).map((k, i) => (
@@ -50,7 +79,7 @@ const ItemOneRow = ({ date, navigation, onClick }) => {
         <View style={styles.divFirst}>
           <View>
             <Text style={styles.titleDate}>
-              {moment(k[0]).local('fr').format('LL')}
+              {moment(k[0]).locale('fr').format('LL')}
             </Text>
           </View>
           <View>
@@ -66,12 +95,30 @@ const ItemOneRow = ({ date, navigation, onClick }) => {
             <Text style={{ marginRight: 10 }}>{nbPackages(k[1])} colis</Text>
             <SvgXml
               title={'Nombre de colis'}
-              xml={OnePackageImg}
+              xml={renderImgPackages(nbPackages(k[1]))}
               width={45}
               height={45}
             />
           </View>
-          <View style={styles.divUsers}>{renderResident(k[1])}</View>
+          <View style={styles.divUsers}>
+            {renderResident(k[1])}
+            {k[1].length > 3 && (
+              <View
+                style={{
+                  marginLeft: 5,
+                  width: 24,
+                  height: 24,
+                  backgroundColor: '#B0B6BB',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 14,
+                }}
+              >
+                <Text>+{k[1].length - 3}</Text>
+              </View>
+            )}
+          </View>
         </View>
       </View>
     </Pressable>
