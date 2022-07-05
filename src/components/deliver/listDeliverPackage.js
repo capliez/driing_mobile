@@ -13,7 +13,7 @@ const ListDeliverPackageComponent = ({
   t,
   navigation,
   loadingPackages,
-  idBuilding,
+  allBuildings,
 }) => {
   const [searchTerm, onChangeText] = useState('');
 
@@ -22,6 +22,7 @@ const ListDeliverPackageComponent = ({
       <InputSearchLazyComponent
         value={searchTerm}
         onChangeText={onChangeText}
+        allBuildings={allBuildings}
       />
 
       {packages ? (
@@ -36,7 +37,7 @@ const ListDeliverPackageComponent = ({
                   navigation={navigation}
                   loadingPackages={loadingPackages}
                   key={item.index}
-                  idBuilding={idBuilding}
+                  idBuilding={allBuildings.id}
                   item={item.item}
                 />
               )}
@@ -63,6 +64,7 @@ ListDeliverPackageComponent.propTypes = {
   t: PropTypes.any,
   navigation: PropTypes.object,
   loadingPackages: PropTypes.bool,
+  allBuildings: PropTypes.object,
 };
 
 export default ListDeliverPackageComponent;

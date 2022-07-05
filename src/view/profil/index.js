@@ -10,7 +10,7 @@ import {
 import LayoutDefault from '../../layout';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 import { useSelector, useDispatch } from 'react-redux';
-import { SignInRoot } from '../../constants/routes';
+import { SignInRoot, ParametersRoot } from '../../constants/routes';
 import { logoutUser } from '../../redux/auth/actions';
 
 const BlockContactComponent = lazy(
@@ -40,7 +40,8 @@ const ProfilPage = ({ navigation }) => {
         }}
       >
         <Text style={styles.textTitle}>🗃 Mon profil</Text>
-        <View
+        <Pressable
+          onPress={() => navigation.navigate(ParametersRoot)}
           style={{
             display: 'flex',
             flexDirection: 'row',
@@ -54,7 +55,7 @@ const ProfilPage = ({ navigation }) => {
             size={26}
             name="settings"
           />
-        </View>
+        </Pressable>
       </View>
       <View
         style={{

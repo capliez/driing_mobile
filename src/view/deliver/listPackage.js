@@ -31,7 +31,7 @@ const DeliverPackagePage = ({ navigation, route }) => {
       <ListDeliverPackageLazyComponent
         t={t}
         packages={items}
-        idBuilding={allBuildings.id}
+        allBuildings={allBuildings}
         loadingPackages={loadingPackages}
         navigation={navigation}
       />

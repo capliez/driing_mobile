@@ -9,3 +9,4 @@ export const ProfilRoot = 'profil';
 export const ContactSyndicRoot = 'syndicInfo';
 export const AddResidentRoot = 'addResident';
 export const AddResidentStep1Root = 'addresidentStep1';
+export const ParametersRoot = 'parameters';
