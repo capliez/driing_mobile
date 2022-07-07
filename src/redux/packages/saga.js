@@ -25,6 +25,8 @@ import {
   getPackagesNoHandedOverError,
   getPackagesNoHandedOverSuccess,
 } from './actions';
+import { getResidentsAsync } from '../residents/saga';
+import { getResidentsSuccess } from '../residents/actions';
 
 const MSG_ERROR = 'Packages : An error has occurred';
 
@@ -114,9 +116,15 @@ const registerPackageAsync = async (item) => {
 };
 
 function* registerPackage({ payload }) {
+  const { building } = payload;
+
   try {
     const result = yield call(registerPackageAsync, payload);
-    if (result.status === 201) {
+    const residents = yield call(getResidentsAsync, building.id);
+
+    if (result.status === 201 && residents.status === 200) {
+      yield put(getResidentsSuccess(residents.data['hydra:member']));
+
       yield put(registerPackageSuccess(result.data));
     } else {
       yield put(registerPackageError(MSG_ERROR));
@@ -140,11 +148,38 @@ const updatePackageAsync = async (id) => {
 };
 
 function* updatePackage({ payload }) {
+  const { id, idBuilding } = payload;
   try {
-    const result = yield call(updatePackageAsync, payload);
+    const result = yield call(updatePackageAsync, id);
 
     if (result.status === 200) {
       yield put(updatePackageSuccess(result.data));
+      const nbPackages = yield call(
+        getCountPackagesHandedOverAsync,
+        idBuilding,
+      );
+      const residents = yield call(getResidentsAsync, idBuilding);
+      const packages = yield call(getPackagesAsync, idBuilding);
+      if (
+        packages?.status === 200 &&
+        nbPackages?.status === 200 &&
+        residents?.status === 200
+      ) {
+        yield put(getResidentsSuccess(residents.data['hydra:member']));
+
+        yield put(
+          getPackagesNoHandedOverSuccess(
+            parseInt(
+              nbPackages.data['hydra:member'][0]
+                ? nbPackages.data['hydra:member'][0]
+                : 0,
+            ),
+          ),
+        );
+        yield put(getPackagesSuccess(packages.data['hydra:member']));
+      } else {
+        yield put(getPackagesError(MSG_ERROR));
+      }
     } else {
       yield put(updatePackageError(MSG_ERROR));
     }

@@ -67,7 +67,7 @@ const ListDeliverComponent = ({
         </View>
       )}
 
-      {!isNotEmpty(searchTerm) && isNotEmptyArray(items) && !loadingPackages && (
+      {!isNotEmpty(searchTerm) && isNotEmptyArray(items) && (
         <View style={{ marginVertical: 15, flex: 1 }}>
           <FlatList
             showsVerticalScrollIndicator={false}

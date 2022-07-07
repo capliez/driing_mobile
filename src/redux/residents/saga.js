@@ -58,7 +58,7 @@ export function* watchGetResidents() {
   yield takeEvery(GET_RESIDENTS, getResidents);
 }
 
-const getResidentsAsync = async (id) =>
+export const getResidentsAsync = async (id) =>
   await Axios.get(`${RESIDENTS_API}/building/${id}`)
     .then((result) => result)
     .catch((error) => error);

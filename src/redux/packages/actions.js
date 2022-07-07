@@ -81,9 +81,9 @@ export const registerPackageError = (message) => ({
 });
 
 /* PUT */
-export const updatePackage = (id) => ({
+export const updatePackage = (id, idBuilding) => ({
   type: UPDATE_PACKAGE,
-  payload: id,
+  payload: { id, idBuilding },
 });
 export const updatePackageSuccess = (items) => ({
   type: UPDATE_PACKAGE_SUCCESS,

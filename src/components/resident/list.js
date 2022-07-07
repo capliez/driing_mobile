@@ -14,7 +14,7 @@ const ListResidentComponent = ({
   residents,
   t,
   navigation,
-  idBuilding,
+  allBuildings,
   loadingResidents,
 }) => {
   const [searchTerm, onChangeText] = React.useState('');
@@ -33,6 +33,7 @@ const ListResidentComponent = ({
       <InputSearchLazyComponent
         value={searchTerm}
         onChangeText={onChangeText}
+        allBuildings={allBuildings}
       />
 
       {loadingResidents && !isNotEmpty(residents) && (
@@ -44,7 +45,7 @@ const ListResidentComponent = ({
           {residents && residents.length > 0 ? (
             <FlatList
               data={filterList()}
-              onRefresh={() => dispatch(getResidents(idBuilding))}
+              onRefresh={() => dispatch(getResidents(allBuildings.id))}
               refreshing={loadingResidents}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{ paddingBottom: 90 }}
@@ -80,7 +81,7 @@ ListResidentComponent.propTypes = {
   residents: PropTypes.array,
   t: PropTypes.any,
   navigation: PropTypes.object,
-  idBuilding: PropTypes.number,
+  allBuildings: PropTypes.object,
   loadingResidents: PropTypes.bool,
 };
 

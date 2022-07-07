@@ -2,34 +2,33 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import {
-  AddPackageRoot,
-  ContactSyndicRoot,
-} from '../../../../constants/routes';
+import { ContactSyndicRoot } from '../../../../constants/routes';
 import ImgContact from '../../../../images/block/contact';
 const BlockContact = ({ navigation }) => {
   return (
-    <View style={styles.divMain}>
-      <View style={{ width: '65%' }}>
-        <Text style={styles.text}>
-          Un problème à signaler, une demande particulière ?
-        </Text>
-        <Pressable
-          onPress={() => navigation.navigate(ContactSyndicRoot)}
-          style={styles.btn}
-        >
-          <Text style={styles.textBtn}>Contacter votre syndic</Text>
-        </Pressable>
+    <Pressable onPress={() => navigation.navigate(ContactSyndicRoot)}>
+      <View style={styles.divMain}>
+        <View style={{ width: '65%' }}>
+          <Text style={styles.text}>
+            Un problème à signaler, une demande particulière ?
+          </Text>
+          <Pressable
+            onPress={() => navigation.navigate(ContactSyndicRoot)}
+            style={styles.btn}
+          >
+            <Text style={styles.textBtn}>Contacter votre syndic</Text>
+          </Pressable>
+        </View>
+        <View style={styles.divLast}>
+          <SvgXml
+            title={'Contacter votre syndic'}
+            xml={ImgContact}
+            width={120}
+            height={130}
+          />
+        </View>
       </View>
-      <View style={styles.divLast}>
-        <SvgXml
-          title={'Contacter votre syndic'}
-          xml={ImgContact}
-          width={120}
-          height={130}
-        />
-      </View>
-    </View>
+    </Pressable>
   );
 };
 

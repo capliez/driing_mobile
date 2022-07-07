@@ -45,7 +45,7 @@ const ListResident = ({ navigation }) => {
       />
       <ListResidentLazyComponent
         t={t}
-        idBuilding={allBuildings?.id}
+        allBuildings={allBuildings}
         residents={allResidents}
         loadingResidents={loadingResidents}
         navigation={navigation}

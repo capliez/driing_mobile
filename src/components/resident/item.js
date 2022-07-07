@@ -6,20 +6,35 @@ import IconIonicons from 'react-native-vector-icons/Ionicons';
 import { DeliverCurrentRoot } from '../../constants/routes';
 import { useTranslation } from 'react-i18next';
 import UserAvatar from 'react-native-user-avatar';
-
-const ItemResident = ({ item, navigation, onClick }) => {
+import { getResidentCurrrent } from '../../redux/residents/actions';
+import { useDispatch } from 'react-redux';
+import CurrentDeliver from '../../view/deliver/current';
+const ItemResident = ({ item, navigation, noDetails, onClick, isCurrent }) => {
   const { t } = useTranslation('deliver');
+  const dispatch = useDispatch();
+
+  const viewResident = () => {
+    dispatch(getResidentCurrrent(item.id));
+    navigation?.navigate(DeliverCurrentRoot);
+  };
+
   return (
-    <Pressable
-      onPress={() =>
-        navigation ? navigation?.navigate(DeliverCurrentRoot) : onClick(item)
-      }
-    >
+    <Pressable onPress={() => (navigation ? viewResident() : onClick(item))}>
       <View accessible accessibilityRole="tab" style={styles.divItem}>
         <View style={{ flexDirection: 'row' }}>
-          <View style={styles.divItemProfile}>
-            <UserAvatar style={styles.userProfile} name={item.lastName} />
-          </View>
+          {!noDetails && (
+            <View style={styles.divItemProfile}>
+              <UserAvatar
+                size={isCurrent ? 40 : 30}
+                style={[
+                  styles.userProfile,
+                  isCurrent && { width: 50, height: 50, borderRadius: 50 },
+                ]}
+                name={item.lastName}
+              />
+            </View>
+          )}
+
           <View style={styles.divItemLabel}>
             <View
               style={{
@@ -29,15 +44,18 @@ const ItemResident = ({ item, navigation, onClick }) => {
                 alignItems: 'center',
               }}
             >
-              <Text
-                accessible
-                accessibilityRole="text"
-                accessibilityLabel={item.lastName}
-                style={styles.textNameUser}
-              >
-                {item.lastName.toUpperCase()}
-              </Text>
-              {item.packageHandedOver && (
+              {!noDetails && (
+                <Text
+                  accessible
+                  accessibilityRole="text"
+                  accessibilityLabel={item.lastName}
+                  style={styles.textNameUser}
+                >
+                  {item.lastName.toUpperCase()}
+                </Text>
+              )}
+
+              {item.packageHandedOver && !isCurrent && !noDetails && (
                 <View
                   style={{
                     marginLeft: 10,
@@ -50,67 +68,114 @@ const ItemResident = ({ item, navigation, onClick }) => {
                 </View>
               )}
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
-                accessible
-                accessibilityRole="text"
-                accessibilityLabel={t('textCountPackage')}
-                style={styles.textItemLabel}
-              >
-                📬 {t('textCountPackage')} :
-              </Text>
-              <Text
-                accessible
-                accessibilityRole="text"
-                accessibilityLabel={item.nbPackage}
-                style={styles.textItemValue}
-              >
-                {item.countPackages}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <Text
-                accessible
-                accessibilityRole="text"
-                accessibilityLabel={t('textDate')}
-                style={styles.textItemLabel}
-              >
-                ⏰ {t('textDate')} :
-              </Text>
-              <Moment
-                accessible
-                accessibilityRole="text"
-                style={styles.textItemValue}
-                format="DD.MM.YYYY hh:mm"
-                element={Text}
-              >
-                {item.createdAt}
-              </Moment>
-            </View>
+            {isCurrent ? (
+              <>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text
+                    accessible
+                    accessibilityRole="text"
+                    accessibilityLabel={t('textCountPackage')}
+                    style={styles.textItemLabel}
+                  >
+                    🏠 Résidence :
+                  </Text>
+                  <Text
+                    accessible
+                    accessibilityRole="text"
+                    accessibilityLabel={item.nbPackage}
+                    style={styles.textItemValue}
+                  >
+                    n°21 porte A
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginTop: 3,
+                  }}
+                >
+                  <Text
+                    accessible
+                    accessibilityRole="text"
+                    accessibilityLabel={t('textDate')}
+                    style={styles.textItemLabel}
+                  >
+                    📞 Téléphone :
+                  </Text>
+                  <Text
+                    accessible
+                    accessibilityRole="text"
+                    accessibilityLabel={item.nbPackage}
+                    style={styles.textItemValue}
+                  >
+                    {item.phone}
+                  </Text>
+                </View>
+              </>
+            ) : (
+              <>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text
+                    accessible
+                    accessibilityRole="text"
+                    accessibilityLabel={t('textCountPackage')}
+                    style={styles.textItemLabel}
+                  >
+                    📬 {t('textCountPackage')} :
+                  </Text>
+                  <Text
+                    accessible
+                    accessibilityRole="text"
+                    accessibilityLabel={item.nbPackage}
+                    style={styles.textItemValue}
+                  >
+                    {item.countPackages}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Text
+                    accessible
+                    accessibilityRole="text"
+                    accessibilityLabel={t('textDate')}
+                    style={styles.textItemLabel}
+                  >
+                    ⏰ {t('textDate')} :
+                  </Text>
+                  <Moment
+                    accessible
+                    accessibilityRole="text"
+                    style={styles.textItemValue}
+                    format="DD.MM.YYYY hh:mm"
+                    element={Text}
+                  >
+                    {item.createdAt}
+                  </Moment>
+                </View>
+              </>
+            )}
           </View>
         </View>
-        <View style={styles.divLast}>
-          {(navigation || onClick) && (
-            <Pressable
-              onPress={() =>
-                navigation
-                  ? navigation?.navigate(DeliverCurrentRoot)
-                  : onClick(item)
-              }
-            >
-              <IconIonicons
-                color={'#131314'}
-                size={28}
-                name="chevron-forward-outline"
-              />
-            </Pressable>
-          )}
-        </View>
+        {!isCurrent && (
+          <View style={styles.divLast}>
+            {(navigation || onClick) && (
+              <Pressable
+                onPress={() => (navigation ? viewResident() : onClick(item))}
+              >
+                <IconIonicons
+                  color={'#131314'}
+                  size={28}
+                  name="chevron-forward-outline"
+                />
+              </Pressable>
+            )}
+          </View>
+        )}
       </View>
     </Pressable>
   );
@@ -164,6 +229,8 @@ ItemResident.propTypes = {
   item: PropTypes.object,
   navigation: PropTypes.object,
   onClick: PropTypes.func,
+  isCurrent: PropTypes.bool,
+  noDetails: PropTypes.bool,
 };
 
 export default ItemResident;

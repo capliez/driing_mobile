@@ -11,16 +11,43 @@ import ButtonComponent from '../../components/_shared/button';
 import { useDispatch } from 'react-redux';
 import { updatePackage } from '../../redux/packages/actions';
 import { DeliverListRoot } from '../../constants/routes';
-
-const ItemPackage = ({ item, loadingPackages, navigation }) => {
+import TwoPackageImg from '../../images/packages/twoPackage';
+import ThreePackageImg from '../../images/packages/threePackage';
+import FourPackageImg from '../../images/packages/fourPackage';
+import FivePackageImg from '../../images/packages/fivePackage';
+import SixPackageImg from '../../images/packages/sixPackage';
+import SevenPackageImg from '../../images/packages/sevenPackage';
+import EightPackageImg from '../../images/packages/eightPackage';
+const ItemPackage = ({ item, loadingPackages, navigation, idBuilding }) => {
   const { t } = useTranslation('deliver');
   const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
 
   const submitHandedOver = () => {
-    dispatch(updatePackage(item.id));
+    dispatch(updatePackage(item.id, idBuilding));
     setModalVisible(false);
     navigation.navigate(DeliverListRoot);
+  };
+
+  const renderImgPackages = (nb) => {
+    switch (nb) {
+      case 1:
+        return OnePackageImg;
+      case 2:
+        return TwoPackageImg;
+      case 3:
+        return ThreePackageImg;
+      case 4:
+        return FourPackageImg;
+      case 5:
+        return FivePackageImg;
+      case 6:
+        return SixPackageImg;
+      case 7:
+        return SevenPackageImg;
+      default:
+        return EightPackageImg;
+    }
   };
 
   return (
@@ -58,7 +85,12 @@ const ItemPackage = ({ item, loadingPackages, navigation }) => {
             </View>
 
             <View
-              style={{ backgroundColor: '#F5F5F7', padding: 15, marginTop: 30 }}
+              style={{
+                backgroundColor: '#F5F5F7',
+                padding: 15,
+                marginTop: 30,
+                borderRadius: 10,
+              }}
             >
               <View
                 style={{
@@ -74,7 +106,7 @@ const ItemPackage = ({ item, loadingPackages, navigation }) => {
                 />
                 <SvgXml
                   title={'Nombre de colis'}
-                  xml={OnePackageImg}
+                  xml={renderImgPackages(item.nbPackage)}
                   width={70}
                   height={70}
                 />
@@ -140,79 +172,81 @@ const ItemPackage = ({ item, loadingPackages, navigation }) => {
           </View>
         </View>
       </Modal>
-      <View accessible accessibilityRole="tab" style={styles.divItem}>
-        <View style={{ flexDirection: 'row' }}>
-          <View style={styles.divItemProfile}>
-            <UserAvatar
-              style={styles.userProfile}
-              name={item.resident.lastName}
-            />
+      <Pressable onPress={() => setModalVisible(true)}>
+        <View accessible accessibilityRole="tab" style={styles.divItem}>
+          <View style={{ flexDirection: 'row' }}>
+            <View style={styles.divItemProfile}>
+              <UserAvatar
+                style={styles.userProfile}
+                name={item.resident.lastName}
+              />
+            </View>
+            <View style={styles.divItemLabel}>
+              <View style={{ marginBottom: 5 }}>
+                <Text
+                  accessible
+                  accessibilityRole="text"
+                  accessibilityLabel={item.resident.lastName}
+                  style={styles.textNameUser}
+                >
+                  {item.resident.lastName.toUpperCase()}
+                </Text>
+              </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text
+                  accessible
+                  accessibilityRole="text"
+                  accessibilityLabel={t('textCountPackage')}
+                  style={styles.textItemLabel}
+                >
+                  📬 {t('textCountPackage')} :
+                </Text>
+                <Text
+                  accessible
+                  accessibilityRole="text"
+                  accessibilityLabel={item.nbPackage}
+                  style={styles.textItemValue}
+                >
+                  {item.nbPackage}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <Text
+                  accessible
+                  accessibilityRole="text"
+                  accessibilityLabel={t('textDate')}
+                  style={styles.textItemLabel}
+                >
+                  ⏰ {t('textDate')} :
+                </Text>
+                <Moment
+                  accessible
+                  accessibilityRole="text"
+                  style={styles.textItemValue}
+                  format="DD.MM.YYYY hh:mm"
+                  element={Text}
+                >
+                  {item.createdAt}
+                </Moment>
+              </View>
+            </View>
           </View>
-          <View style={styles.divItemLabel}>
-            <View style={{ marginBottom: 5 }}>
-              <Text
-                accessible
-                accessibilityRole="text"
-                accessibilityLabel={item.resident.lastName}
-                style={styles.textNameUser}
-              >
-                {item.resident.lastName.toUpperCase()}
-              </Text>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
-                accessible
-                accessibilityRole="text"
-                accessibilityLabel={t('textCountPackage')}
-                style={styles.textItemLabel}
-              >
-                📬 {t('textCountPackage')} :
-              </Text>
-              <Text
-                accessible
-                accessibilityRole="text"
-                accessibilityLabel={item.nbPackage}
-                style={styles.textItemValue}
-              >
-                {item.nbPackage}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <Text
-                accessible
-                accessibilityRole="text"
-                accessibilityLabel={t('textDate')}
-                style={styles.textItemLabel}
-              >
-                ⏰ {t('textDate')} :
-              </Text>
-              <Moment
-                accessible
-                accessibilityRole="text"
-                style={styles.textItemValue}
-                format="DD.MM.YYYY hh:mm"
-                element={Text}
-              >
-                {item.createdAt}
-              </Moment>
-            </View>
+          <View style={styles.divLast}>
+            <Pressable onPress={() => setModalVisible(true)}>
+              <IconIonicons
+                color={'#131314'}
+                size={28}
+                name="chevron-forward-outline"
+              />
+            </Pressable>
           </View>
         </View>
-        <View style={styles.divLast}>
-          <Pressable onPress={() => setModalVisible(true)}>
-            <IconIonicons
-              color={'#131314'}
-              size={28}
-              name="chevron-forward-outline"
-            />
-          </Pressable>
-        </View>
-      </View>
+      </Pressable>
     </>
   );
 };

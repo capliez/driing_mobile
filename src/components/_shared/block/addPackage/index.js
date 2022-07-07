@@ -6,26 +6,28 @@ import { AddPackageRoot } from '../../../../constants/routes';
 import ImgAddPackage from '../../../../images/block/addPackage';
 const BlockAddPackage = ({ navigation }) => {
   return (
-    <View style={styles.divMain}>
-      <View style={{ width: '65%' }}>
-        <Text style={styles.text}>Vous avez reçu des colis ?</Text>
-        <Text style={styles.text}>Ajoutez-les !</Text>
-        <Pressable
-          onPress={() => navigation.navigate(AddPackageRoot)}
-          style={styles.btn}
-        >
-          <Text style={styles.textBtn}>Ajouter des colis</Text>
-        </Pressable>
+    <Pressable onPress={() => navigation.navigate(AddPackageRoot)}>
+      <View style={styles.divMain}>
+        <View style={{ width: '65%' }}>
+          <Text style={styles.text}>Vous avez reçu des colis ?</Text>
+          <Text style={styles.text}>Ajoutez-les !</Text>
+          <Pressable
+            onPress={() => navigation.navigate(AddPackageRoot)}
+            style={styles.btn}
+          >
+            <Text style={styles.textBtn}>Ajouter des colis</Text>
+          </Pressable>
+        </View>
+        <View style={styles.divLast}>
+          <SvgXml
+            title={"Ajout d'un colis"}
+            xml={ImgAddPackage}
+            width={120}
+            height={130}
+          />
+        </View>
       </View>
-      <View style={styles.divLast}>
-        <SvgXml
-          title={"Ajout d'un colis"}
-          xml={ImgAddPackage}
-          width={120}
-          height={130}
-        />
-      </View>
-    </View>
+    </Pressable>
   );
 };
 

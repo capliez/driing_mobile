@@ -64,7 +64,6 @@ const loginWithPhonePasswordAsync = async ({ phone, password }) =>
 function* loginWithEmailPassword({ payload }) {
   try {
     const result = yield call(loginWithPhonePasswordAsync, payload);
-    console.log(result);
     if (result?.status === 200) {
       const token = result.data.token;
 
