@@ -48,6 +48,7 @@ const INIT_STATE = {
   success: false,
   loadingCookie: false,
   loadingLogout: false,
+  isSignedIn: false,
 };
 
 export const AuthReducer = (state = INIT_STATE, action) => {
@@ -68,6 +69,7 @@ export const AuthReducer = (state = INIT_STATE, action) => {
         loading: false,
         loadingCookie: false,
         currentUser: action.payload,
+        isSignedIn: true,
         error: '',
       };
     case LOGIN_USER_ERROR_COOKIE:
@@ -86,6 +88,7 @@ export const AuthReducer = (state = INIT_STATE, action) => {
         ...state,
         loading: false,
         currentUser: action.payload,
+        isSignedIn: true,
         error: '',
       };
     case LOGIN_USER_ERROR:
@@ -145,7 +148,7 @@ export const AuthReducer = (state = INIT_STATE, action) => {
     case LOGOUT_USER_SUCCESS:
       return {
         ...state,
-        currentUser: null,
+        isSignedIn: false,
         error: '',
         loadingLogout: false,
       };

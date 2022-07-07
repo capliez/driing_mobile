@@ -1,5 +1,12 @@
 import React, { lazy } from 'react';
-import { Text, View, StyleSheet, SafeAreaView, Pressable } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  SafeAreaView,
+  Pressable,
+  Linking,
+} from 'react-native';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 import { ProfilRoot } from '../../constants/routes';
 import UserAvatar from 'react-native-user-avatar';
@@ -74,36 +81,39 @@ const InfoSyndic = ({ navigation }) => {
             </View>
           </View>
         </View>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: 20,
-            backgroundColor: '#E3EDF2',
-            borderRadius: 10,
-          }}
-        >
-          <View>
-            <IconIonicons color={'#131314'} size={50} name="call" />
+        <Pressable onPress={() => Linking.openURL(`tel:0767514913`)}>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: 20,
+              backgroundColor: '#E3EDF2',
+              borderRadius: 10,
+            }}
+          >
+            <View>
+              <IconIonicons color={'#131314'} size={50} name="call" />
+            </View>
+            <View>
+              <Text
+                style={{
+                  fontSize: 24,
+                  fontWeight: '700',
+                  lineHeight: 29,
+                  marginBottom: 10,
+                }}
+              >
+                07 67 51 49 13
+              </Text>
+              <Text style={{ fontSize: 16, fontWeight: '600', lineHeight: 19 }}>
+                Numéro de téléphone du syndic
+              </Text>
+            </View>
           </View>
-          <View>
-            <Text
-              style={{
-                fontSize: 24,
-                fontWeight: '700',
-                lineHeight: 29,
-                marginBottom: 10,
-              }}
-            >
-              07 67 51 49 13
-            </Text>
-            <Text style={{ fontSize: 16, fontWeight: '600', lineHeight: 19 }}>
-              Numéro de téléphone du syndic
-            </Text>
-          </View>
-        </View>
+        </Pressable>
+
         <View style={{ marginVertical: 20 }}>
           <Text style={styles.title2}>Besoin d’être recontacté ?</Text>
         </View>

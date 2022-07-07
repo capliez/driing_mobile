@@ -38,11 +38,9 @@ const AddResidentStep1Screen = lazy(() => import('./view/addResident/step1'));
 const ParametersScreen = lazy(() => import('./view/parameters'));
 
 export default () => {
-  const {
-    currentUser,
-    loadingCookie: loadingCookie,
-    loadingLogout,
-  } = useSelector((state) => state.authUser);
+  const { loadingCookie: loadingCookie, isSignedIn } = useSelector(
+    (state) => state.authUser,
+  );
 
   //Si cookie authentification
   if (loadingCookie) {
@@ -59,7 +57,7 @@ export default () => {
         translucent
       />
 
-      {!loadingLogout && currentUser !== null ? (
+      {isSignedIn ? (
         <Stack.Navigator screenOptions={{ headerBackTitle: '', title: '' }}>
           <Stack.Screen
             name={HomeRoot}
